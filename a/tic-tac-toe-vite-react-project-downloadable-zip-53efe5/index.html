@@ -157,7 +157,7 @@ export default defineConfig({
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx"><\/script>
   </body>
 </html>
 `,
@@ -420,27 +420,18 @@ export function emptyIndices(board) {
 }
 
 /**
- * Negamax with alpha-beta pruning and a transposition table.
- * Returns a score for the side-to-move, memoised per (board, mark, depth).
+ * Negamax with alpha-beta pruning. Returns the exact score for the
+ * side-to-move. (An earlier version kept a transposition table, but cached
+ * alpha-beta bounds were reused as exact scores and made Hard occasionally
+ * blunder. This game tree is tiny — a full search runs in milliseconds —
+ * so the table was removed rather than repaired.)
  */
-const memo = new Map()
-
-function key(board, mark, depth) {
-  let s = mark
-  for (let i = 0; i < 9; i++) s += board[i] === EMPTY ? '_' : board[i]
-  return s + '|' + depth
-}
-
 function negamax(board, mark, depth, alpha, beta, rand) {
   const winner = winnerOf(board)
   if (winner) return winner === mark ? 10 - (9 - emptyIndices(board).length) : -10 + (9 - emptyIndices(board).length)
   const empties = emptyIndices(board)
   if (!empties.length) return 0
   if (depth <= 0) return 0
-
-  const k = key(board, mark, depth)
-  const cached = memo.get(k)
-  if (cached !== undefined) return cached
 
   let best = -Infinity
   const order = rand ? shuffle(empties, rand) : empties
@@ -455,7 +446,6 @@ function negamax(board, mark, depth, alpha, beta, rand) {
     if (alpha >= beta) break
   }
 
-  memo.set(k, best)
   return best
 }
 
@@ -492,18 +482,13 @@ export function nextBestMove(board, mark, difficulty = 'hard', rand = Math.rando
   return ties[Math.floor(rand() * ties.length)]
 }
 
-export function clearMemo() {
-  memo.clear()
-}
 `,
 
-"src/game/engine.test.js": `import { describe, it, expect, beforeEach } from 'vitest'
+"src/game/engine.test.js": `import { describe, it, expect } from 'vitest'
 import {
   createEmptyBoard, winnerOf, winningLineOf, isFull, isOver,
-  nextBestMove, clearMemo, LINES
+  nextBestMove, LINES, EMPTY
 } from './engine.js'
-
-beforeEach(() => clearMemo())
 
 const seeded = (seq) => () => { seq[0] = (seq[0] * 9301 + 49297) % 233280; return seq[0] / 233280 }
 
@@ -537,10 +522,13 @@ describe('hard AI is unbeatable', () => {
     expect(winnerOf(board)).not.toBe('X')
   })
 
-  it('wins the forced fork line', () => {
-    const board = ['X', EMPTY, EMPTY, EMPTY, 'O', EMPTY, EMPTY, EMPTY, 'X']
-    const move = nextBestMove(board, 'O', 'hard', seeded([3]))
-    board[move] = 'O'
+  it('converts a fork into a forced win', () => {
+    // O holds opposite corners against X's center: playing a second corner
+    // forks two lines, and X can only block one of them.
+    const board = ['O', EMPTY, EMPTY, EMPTY, 'X', EMPTY, EMPTY, EMPTY, 'O']
+    board[nextBestMove(board, 'O', 'hard', seeded([3]))] = 'O'
+    board[nextBestMove(board, 'X', 'hard', seeded([4]))] = 'X'
+    board[nextBestMove(board, 'O', 'hard', seeded([5]))] = 'O'
     expect(winnerOf(board)).toBe('O')
   })
 
@@ -548,9 +536,8 @@ describe('hard AI is unbeatable', () => {
     const board = ['X', 'O', EMPTY, EMPTY, 'X', EMPTY, EMPTY, EMPTY, EMPTY]
     for (let t = 0; t < 40; t++) {
       const move = nextBestMove(board, 'X', 'hard', seeded([t * 31 + 5]))
-      expect(board[move]).toBeUndefined()
-      expect(board[move]).toBe(undefined === move ? board[move] : board[move])
-      expect(board[move] ?? 'ok').toBe('ok')
+      expect(Number.isInteger(move)).toBe(true)
+      expect(board[move]).toBe(EMPTY)
     }
   })
 
@@ -904,9 +891,10 @@ Node.js 18 or newer.
 
 ## How the AI works
 
-engine.js scores every legal reply with negamax plus alpha-beta pruning and a transposition
-table keyed on board + side to move + remaining depth. A win is worth 10 - (plies remaining), a
-draw 0, a loss the negative of that, so the engine prefers fast wins and slow losses.
+engine.js scores every legal reply with negamax plus alpha-beta pruning. A win is worth
+10 - (plies remaining), a draw 0, a loss the negative of that, so the engine prefers fast
+wins and slow losses. The search is exact — no heuristics, no transposition table — so
+Hard genuinely cannot lose.
 
 Difficulty tiers mix randomness on top:
 

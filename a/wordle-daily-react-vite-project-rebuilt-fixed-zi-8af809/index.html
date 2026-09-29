@@ -14,7 +14,7 @@
     font:15px/1.55 ui-sans-serif,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
   .wrap{max-width:960px;margin:0 auto;padding:32px 20px 72px}
   h1{font-size:26px;margin:0 0 4px;letter-spacing:.02em}
-  h2{font-size:17px;margin:34px 0 10px;color:var(--ink)}
+  h2{font-size:17px;margin:34px 0 10px}
   p{margin:0 0 10px}
   .dim{color:var(--dim)}
   .sub{color:var(--dim);font-size:13px;margin:0 0 20px}
@@ -35,7 +35,6 @@
   li{margin:4px 0}
   .badge{display:inline-block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
     color:#0b1220;background:var(--green);border-radius:999px;padding:3px 9px;margin-left:8px;vertical-align:2px}
-  /* ---- playable demo ---- */
   .demo{display:flex;flex-direction:column;align-items:center;gap:10px}
   .db{display:grid;gap:6px}
   .drow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
@@ -57,7 +56,7 @@
 <div class="wrap">
 
   <h1>Wordle Daily <span class="badge">ZIP builder</span></h1>
-  <p class="sub">React 18 + Vite 5 · six guesses, one word a day · rewritten &amp; repackaged</p>
+  <p class="sub">React 18 + Vite 5 &middot; six guesses, one word a day &middot; rewritten &amp; repackaged</p>
 
   <div class="grid2">
 
@@ -70,7 +69,7 @@
         <div id="status"></div>
         <button class="ghost" id="demoReset">Reset demo</button>
       </div>
-      <p class="sub" style="margin-top:12px">Same <code>scoreGuess()</code> as the project below, inlined as vanilla JS.</p>
+      <p class="sub" style="margin-top:12px">Same <code>scoreGuess()</code> as the project, inlined as vanilla JS.</p>
     </div>
 
     <div>
@@ -82,11 +81,11 @@
         <p><button class="primary" id="dl">Download project (.zip)</button></p>
         <div id="status2" style="font-size:13px;color:var(--dim);min-height:18px"></div>
         <ul class="dim" style="font-size:13.5px">
-          <li><b>src/game/wordle.js</b> — pure scoring engine, two-pass duplicate rule</li>
-          <li><b>src/game/wordle.test.js</b> — 6 Vitest cases incl. daily-seed determinism</li>
-          <li><b>src/hooks/useWordle.js</b> — <code>useReducer</code> state machine, stats survive reset</li>
-          <li><b>src/components/</b> — Board / Row / Keyboard, staggered flip, re-keyed shake</li>
-          <li><b>server.mjs</b> — zero-dependency static server for <code>dist/</code></li>
+          <li><b>src/game/wordle.js</b> &mdash; pure scoring engine, two-pass duplicate rule</li>
+          <li><b>src/game/wordle.test.js</b> &mdash; 6 Vitest cases incl. daily-seed determinism</li>
+          <li><b>src/hooks/useWordle.js</b> &mdash; <code>useReducer</code> machine, stats survive reset</li>
+          <li><b>src/components/</b> &mdash; Board / Row / Keyboard, staggered flip, re-keyed shake</li>
+          <li><b>server.mjs</b> &mdash; zero-dependency static server for <code>dist/</code></li>
         </ul>
       </div>
 
@@ -100,11 +99,11 @@ npm run serve     # node server.mjs, port 4173</pre>
 
       <h2>What changed in the rewrite</h2>
       <ul class="dim" style="font-size:13.5px">
-        <li><code>scoreGuess()</code> returns <code>{'{ result, isWin }'}</code> — the unused 3/2/1 weighting is gone</li>
+        <li><code>scoreGuess()</code> returns <code>{ result, isWin }</code> &mdash; the unused 3/2/1 weighting is gone</li>
         <li>Flip stagger is per-cell <code>transitionDelay</code>, not a hardcoded constant</li>
-        <li>Shake re-keys off <code>shakeToken</code>, so a repeated bad guess actually replays the animation</li>
+        <li>Shake re-keys off <code>shakeToken</code>, so a repeated bad guess replays the animation</li>
         <li>Stats load once and are carried through <code>reset</code> instead of being re-read and clobbered</li>
-        <li><code>ALLOWED</code> is <code>new Set([...ANSWERS, ...EXTRA])</code> — it was copying the same array twice</li>
+        <li><code>ALLOWED</code> is <code>new Set([...ANSWERS, ...EXTRA])</code> &mdash; it was copying the same array twice</li>
       </ul>
     </div>
 
@@ -114,96 +113,152 @@ npm run serve     # node server.mjs, port 4173</pre>
 <!-- ================= playable demo ================= -->
 <script>
 (function () {
-  var ANSWERS = ["about","above","abuse","actor","acute","admit","adopt","after","again","agent","agree","ahead","alarm","album","alert","alike","alive","allow","alone","along","alter","among","anger","angle","angry","apart","apple","apply","arena","argue","arise","armor","array","arrow","aside","asset","audio","audit","avoid","awake","award","aware","badly","baker","bases","basic","basin","beach","began","begin","begun","being","below","bench","berry","birth","black","blade","blame","blank","blast","blaze","blend","bless","blind","block","blood","board","boost","booth","bound","brain","brand","brass","bread","break","breed","brick","bride","brief","bring","broad","broke","brown","brush","build","built","burst","cabin","cable","candy","canal","candy","carry","carve","catch","cause","chain","chair","chalk","champ","chart","chase","cheap","check","chess","chest","chief","child","china","chose","civil","claim","class","clean","clear","clerk","click","cliff","climb","clock","close","cloth","cloud","coach","coast","coca","colon","color","comet","comic","coral","couch","could","count","court","cover","crack","craft","crane","crash","crazy","cream","creek","crime","crisp","cross","crowd","crown","crude","curve","cycle","daily","dance","dated","dealt","debut","delay","dense","depth","diary","dirty","dozen","draft","drain","drama","drank","drawn","dream","dress","drink","drive","drove","drum","drink","dusty","eager","eagle","early","earth","eight","elbow","elder","elect","elite","empty","enemy","enjoy","enter","entry","equal","error","essay","event","every","exact","exist","extra","faith","false","fault","favor","fibre","field","fifth","fifty","fight","final","first","fixed","flame","flash","fleet","flesh","float","flood","floor","flour","fluid","focus","force","forth","forty","forum","found","frame","frank","fraud","fresh","fried","front","frost","fruit","fully","funny","giant","given","glass","globe","glory","grace","grade","grain","grand","grant","grape","grasp","grass","grave","great","green","greet","grief","gross","group","grove","guard","guess","guest","guide","happy","heart","heavy","hedge","hello","hence","hobby","honey","honor","horse","hotel","house","human","humor","hurry","ideal","image","imply","index","inner","input","issue","ivory","japan","joint","judge","juice","knife","knock","known","label","labor","large","laser","later","laugh","layer","learn","lease","least","leave","legal","lemon","level","light","limit","linen","links","liver","lobby","local","lodge","logic","loose","lower","loyal","lucky","lunar","lunch","lying","magic","major","maker","march","marsh","match","maybe","mayor","meant","medal","media","metal","meter","might","minor","minus","mixed","model","moist","money","month","moral","motor","mount","mouse","mouth","movie","music","naked","nerve","never","newly","night","noise","north","noted","novel","nurse","occur","ocean","offer","often","olive","onion","opera","orbit","order","organ","other","ought","outer","owner","paint","panel","panic","paper","parka","party","paste","patch","pause","peace","peach","pearl","phase","phone","photo","piano","piece","pilot","pitch","place","plain","plane","plant","plate","plaza","point","polar","porch","pound","power","press","price","pride","prime","print","prior","prize","probe","proof","proud","prove","pulse","punch","pupil","purse","queen","query","quest","queue","quick","quiet","quite","quote","radar","radio","raise","rally","ranch","range","rapid","ratio","reach","ready","realm","rebel","refer","reign","relax","relay","renew","repay","reply","rider","ridge","rifle","right","rigid","rival","river","roast","robin","robot","rocky","roman","rough","round","route","royal","rugby","ruler","rural","salad","salon","sandy","sauce","scale","scene","scope","score","scout","sense","serve","seven","shade","shaft","shake","shall","shape","share","sharp","sheet","shelf","shell","shift","shine","shirt","shock","shoot","shore","short","shout","sight","silly","since","sixth","skill","slate","sleep","slice","slide","slope","small","smart","smile","smoke","snake","solar","solid","solve","sorry","sound","south","space","spare","spark","speak","spear","speed","spell","spend","spice","spike","spine","spite","split","spoke","sport","spray","squad","stack","staff","stage","stain","stair","stake","stamp","stand","stark","start","state","steam","steel','sterling","stick","still","stock","stone','stood".slice(0,0)||"stool","storm","story","stove","strap","straw","strip","study","stuff","style","sugar","suite","sunny","super","sweet","swift","swing","sword","table","taste","teach","teeth","tempo","tenth","thank","theme","there","these","thick","thing","think","third","those","three","throw","thumb","tiger","tight","timer","title","toast","today","token","tooth","topic","torch","total","touch","tough","tower","trace","track","trade","trail","train","trait","trash","treat','"trend","trial","tribe','"trick','"truck','"truly','"trust','"truth','"tulip','"tutor','"twice','"twist','"uncle','"under','"union','"unit','"until','"upper','"upset','"urban','"usage','"usual','"valid','"value','"vapor','"vault','"venue','"video','"vigor','"villa','"vinyl','"virus','"visit','"vital','"vivid','"vocal','"voice','"voter','"wagon','"waist','"waste','"watch','"water','"weave','"wedge','"weigh','"weird','"whale','"wheat','"wheel','"where','"which','"while','"white','"whole','"whose','"widow','"width','"wiper','"witch','"woman','"world','"worry','"worse','"worth','"would','"wound','"wrist','"write','"wrong','"yield','"young','"yours','"youth','"zebra'].filter(function(w){return w.length===5;});
+  var ANSWERS = ("about above actor acute admit adopt after again agent agree ahead alarm album " +
+    "alert alike alive allow alone along alter among anger angle angry apart apple apply arena " +
+    "argue arise armor array arrow aside asset audio audit avoid awake award aware badly baker " +
+    "basic beach begin being below bench berry birth black blade blame blank blast blaze blend " +
+    "bless blind block blood board boost bound brain brand brass bread break brick bride brief " +
+    "bring broad broke brown brush build built burst cabin cable candy canal carry carve catch " +
+    "cause chain chair chalk champ chart chase cheap check chess chest chief child chose civil " +
+    "claim class clean clear clerk click cliff climb clock close cloth cloud coach coast " +
+    "colon color comet comic coral couch could count court cover crack craft crane crash crazy " +
+    "cream crime crisp cross crowd crown crude curve cycle daily dance dated debut delay dense " +
+    "depth diary dirty dozen draft drain drama drank drawn dream dress drink drive drove drum " +
+    "dusty eager eagle early earth eight elbow elder elect elite empty enemy enjoy enter entry " +
+    "equal error essay event every exact exist extra faith false fault favor fibre field fifth " +
+    "fifty fight final first fixed flame flash fleet flesh float flood floor flour fluid focus " +
+    "force forth forty forum found frame frank fraud fresh fried front frost fruit fully funny " +
+    "giant given glass globe glory grace grade grain grand grant grape grasp grass grave great " +
+    "green greet grief gross group grove guard guess guest guide happy heart heavy hedge hello " +
+    "hobby honey honor horse hotel house human humor hurry ideal image imply index inner input " +
+    "issue joint judge juice knife knock known label labor large laser later laugh layer learn " +
+    "lease least leave legal lemon level light limit linen links liver lobby local lodge logic " +
+    "loose lower loyal lucky lunar lunch magic major maker march marsh match maybe mayor medal " +
+    "media metal meter might minor minus mixed model moist money month moral motor mount mouse " +
+    "mouth movie music naked nerve never newly night noise north noted novel nurse ocean offer " +
+    "often olive onion opera orbit order organ other ought outer owner paint panel panic paper " +
+    "party paste patch pause peace peach pearl phase phone photo piano piece pilot pitch place " +
+    "plain plane plant plate plaza point polar porch pound power press price pride prime print " +
+    "prior prize probe proof proud prove pulse punch pupil purse queen query quest queue quick " +
+    "quiet quote radar radio raise rally ranch range rapid ratio reach ready realm rebel refer " +
+    "reign relax relay renew reply rider ridge rifle right rigid rival river roast robin robot " +
+    "rocky roman rough round route royal rugby ruler rural salad salon sandy sauce scale scene " +
+    "scope score scout sense serve seven shade shaft shake shall shape share sharp sheet shelf " +
+    "shell shift shine shirt shock shoot shore short shout sight silly since sixth skill slate " +
+    "sleep slice slide slope small smart smile smoke snake solar solid solve sorry sound south " +
+    "space spare spark speak spear speed spell spend spice spike spine spite split spoke sport " +
+    "spray squad stack staff stage stain stair stake stamp stand stark start state steam steel " +
+    "stick still stock stone stool storm story stove strap straw strip study stuff style sugar " +
+    "suite sunny super sweet swift swing sword table taste teach teeth tempo tenth thank theme " +
+    "there these thick thing think third those three throw thumb tiger tight timer title toast " +
+    "today token tooth topic torch total touch tough tower trace track trade trail train trait " +
+    "trash treat trend trial tribe trick truck truly trust truth tulip tutor twice twist uncle " +
+    "under union unit until upper upset urban usage usual valid value vapor vault venue video " +
+    "vigor villa vinyl virus visit vital vivid vocal voice voter wagon waist waste watch water " +
+    "weave wedge weigh weird whale wheat wheel where which while white whole whose widow width " +
+    "wiper witch woman world worry worse worth would wound wrist write wrong yield young yours " +
+    "youth zebra").split(" ");
+
   var RANK = { absent: 1, present: 2, correct: 3 };
 
   function scoreGuess(guess, answer) {
-    var g = guess.toLowerCase().split('');
-    var a = answer.toLowerCase().split('');
-    var result = g.map(function () { return 'absent'; });
+    var g = guess.toLowerCase().split("");
+    var a = answer.toLowerCase().split("");
+    var result = g.map(function () { return "absent"; });
     var open = a.map(function () { return true; });
-    for (var i = 0; i < g.length; i++) if (g[i] === a[i]) { result[i] = 'correct'; open[i] = false; }
+    for (var i = 0; i < g.length; i++) if (g[i] === a[i]) { result[i] = "correct"; open[i] = false; }
     var pool = {};
     open.forEach(function (o, i) { if (o) pool[a[i]] = (pool[a[i]] || 0) + 1; });
     for (var j = 0; j < g.length; j++) {
-      if (result[j] === 'correct') continue;
+      if (result[j] === "correct") continue;
       var ch = g[j];
-      if (pool[ch] > 0) { result[j] = 'present'; pool[ch]--; }
+      if (pool[ch] > 0) { result[j] = "present"; pool[ch]--; }
     }
-    return { result: result, isWin: result.every(function (r) { return r === 'correct'; }) };
+    return { result: result, isWin: result.every(function (r) { return r === "correct"; }) };
   }
 
   var ROWS = 6, COLS = 5;
   var answer, grid, cur, turn, used, over, msg;
+
   function newGame() {
     answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)];
-    grid = []; cur = ''; turn = 0; used = {}; over = false;
-    msg = 'Guess the word in six tries.';
+    grid = []; cur = ""; turn = 0; used = {}; over = false;
+    msg = "Guess the word in six tries.";
     paint();
   }
+
   function paint() {
-    var db = document.getElementById('db');
-    db.innerHTML = '';
+    var db = document.getElementById("db");
+    db.innerHTML = "";
     for (var r = 0; r < ROWS; r++) {
-      var row = document.createElement('div'); row.className = 'drow';
-      var letters = grid[r] ? grid[r].guess : (r === turn ? cur : '');
+      var row = document.createElement("div");
+      row.className = "drow";
+      var letters = grid[r] ? grid[r].guess : (r === turn ? cur : "");
       for (var c = 0; c < COLS; c++) {
-        var cell = document.createElement('div');
-        cell.className = 'dcell';
+        var cell = document.createElement("div");
+        cell.className = "dcell";
         var sc = grid[r] ? grid[r].result[c] : null;
         if (sc) cell.classList.add(sc);
-        cell.textContent = (letters[c] || '').toUpperCase();
+        cell.textContent = (letters[c] || "").toUpperCase();
         row.appendChild(cell);
       }
       db.appendChild(row);
     }
-    document.getElementById('msg').textContent = msg;
-    var kb = document.getElementById('kbar'); kb.innerHTML = '';
-    'qwertyuiop'.split('').forEach(function (c) { kb.appendChild(mk(c)); });
-    document.getElementById('kbar').appendChild(mk('enter', 'ENTER'));
-    'asdfghjkl'.split('').forEach(function (c) { kb.appendChild(mk(c)); });
-    document.getElementById('kbar').appendChild(mk('back', '⌫'));
-    'zxcvbnm'.split('').forEach(function (c) { kb.appendChild(mk(c)); });
+    document.getElementById("msg").textContent = msg;
+
+    var kb = document.getElementById("kbar");
+    kb.innerHTML = "";
+    "qwertyuiop".split("").forEach(function (c) { kb.appendChild(mk(c, c)); });
+    kb.appendChild(mk("Enter", "ENTER"));
+    "asdfghjkl".split("").forEach(function (c) { kb.appendChild(mk(c, c)); });
+    kb.appendChild(mk("Backspace", "&#9003;"));
+    "zxcvbnm".split("").forEach(function (c) { kb.appendChild(mk(c, c)); });
+
     function mk(key, label) {
-      var b = document.createElement('button');
+      var b = document.createElement("button");
       if (used[key]) b.classList.add(used[key]);
-      b.textContent = label || key.toUpperCase();
+      b.innerHTML = label;
       b.onclick = function () { hit(key); };
       return b;
     }
   }
+
   function hit(k) {
     if (over) return;
-    if (k === 'enter') return submit();
-    if (k === 'back') { cur = cur.slice(0, -1); return paint(); }
+    if (k === "Enter") return submit();
+    if (k === "Backspace") { cur = cur.slice(0, -1); return paint(); }
     if (cur.length < COLS) cur += k;
     paint();
   }
+
   function submit() {
-    if (cur.length < COLS) { msg = 'Not enough letters.'; return paint(); }
+    if (cur.length < COLS) { msg = "Not enough letters."; return paint(); }
     var res = scoreGuess(cur, answer);
     for (var i = 0; i < COLS; i++) {
       var ch = cur[i].toUpperCase();
       if (!used[ch] || RANK[res.result[i]] > RANK[used[ch]]) used[ch] = res.result[i];
     }
     grid.push({ guess: cur, result: res.result });
-    turn++; cur = '';
-    if (res.isWin) { over = true; msg = 'You got it — ' + answer.toUpperCase() + ' in ' + turn + '.'; }
-    else if (turn >= ROWS) { over = true; msg = 'Answer: ' + answer.toUpperCase(); }
-    else msg = (ROWS - turn) + (ROWS - turn === 1 ? ' try left.' : ' tries left.');
+    turn++; cur = "";
+    if (res.isWin) { over = true; msg = "Solved in " + turn + "."; }
+    else if (turn >= ROWS) { over = true; msg = "Answer: " + answer.toUpperCase(); }
+    else msg = (ROWS - turn) + (ROWS - turn === 1 ? " try left." : " tries left.");
     paint();
   }
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') submit();
-    else if (e.key === 'Backspace') { cur = cur.slice(0, -1); paint(); }
+
+  document.addEventListener("keydown", function (e) {
+    if (over) return;
+    if (e.key === "Enter") submit();
+    else if (e.key === "Backspace") { cur = cur.slice(0, -1); paint(); }
     else if (/^[a-zA-Z]$/.test(e.key) && cur.length < COLS) { cur += e.key.toLowerCase(); paint(); }
   });
-  document.getElementById('demoReset').onclick = newGame;
+
+  document.getElementById("demoReset").onclick = newGame;
   newGame();
 })();
 </script>
 
-<!-- ================= payload blocks (type=text/plain — never parsed as JS) ================= -->
+<!-- ================= payload blocks (type=file/plain, never parsed as JS) ================= -->
 <script type="file/plain" data-name="wordle-daily/package.json">
 {
   "name": "wordle-daily",
@@ -254,7 +309,7 @@ export default defineConfig({
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"><\/script>
+    <script type="module" src="/src/main.jsx">[[/script]]
   </body>
 </html>
 </script>
@@ -283,47 +338,47 @@ Six guesses, one five-letter word a day. React 18 + Vite 5, no CSS framework.
 
 ## Scoring rules
 
-\`scoreGuess(guess, answer)\` returns \`{ result, isWin }\` where \`result\` is an
-array of \`'correct' | 'present' | 'absent'\`, one per guess letter.
+`scoreGuess(guess, answer)` returns `{ result, isWin }`, where `result` is one
+of `'correct' | 'present' | 'absent'` per guess letter.
 
 It runs in two passes, which is what makes the duplicate-letter rule correct:
 
 1. **Greens first.** Every guess letter matching the answer in the same slot is
-   marked \`correct\` and that answer slot is consumed.
+   marked `correct`, and that answer slot is consumed.
 2. **Yellows from what is left.** Only the *remaining* answer letters can
-   produce a \`present\`. One spare \`e\` in the answer means a second \`e\` in
-   the guess is \`absent\`, never \`present\`.
+   produce a `present`. One spare `e` in the answer means a second `e` in
+   the guess is `absent`, never `present`.
 
-Worked example — guess \`SPEED\`, answer \`ERASE\`. No greens. The answer has two
-\`e\`s, so both \`e\`s in the guess go yellow and \`s\` goes yellow too:
+Worked example, guess `SPEED` against answer `ERASE`. No greens. The answer has
+two `e`s, so both `e`s in the guess go yellow and the `s` goes yellow too:
 
     guess   S P E E D
-    result  🟨 ⬜ 🟨 🟨 ⬜
+    result  Y . Y Y .
 
 ## Daily word
 
-\`dailyIndex(dateKey, length)\` is an FNV-1a hash of \`YYYY-MM-DD\`, so everyone
-on the same date gets the same answer, without a server. Swap the derivation
-if you want a different rotation.
+`dailyIndex(dateKey, length)` is an FNV-1a hash of `YYYY-MM-DD`, so everyone
+on the same date gets the same answer with no server involved. Change the
+derivation if you want a different rotation.
 
 ## Word list
 
-\`src/data/words.js\` ships ~150 five-letter answers plus a larger \`EXTRA\`
-guesses-allowed list. \`ALLOWED\` is \`new Set([...ANSWERS, ...EXTRA])\`. Replace
+`src/data/words.js` ships a five-letter answer list plus a larger `EXTRA`
+guesses-allowed list. `ALLOWED` is `new Set([...ANSWERS, ...EXTRA])`. Replace
 both arrays with a dated list to run a real shared daily.
 
 ## Accessibility
 
-Tiles are buttons, the board is a \`role="grid"\`, status changes land in an
-\`aria-live\` region, and all transitions collapse under
-\`prefers-reduced-motion\`.
+Tiles are buttons, the board is a `role="grid"`, status changes land in an
+`aria-live` region, and every transition collapses under
+`prefers-reduced-motion`.
 
 ## Layout
 
-Flip animation is two 3D faces on a \`.tile__inner\`: the back face is
-pre-rotated 180° and carries the score colour, so rotating the inner 180°
-reveals it with no colour swap in JS. Per-cell \`transitionDelay\` staggers the
-row left-to-right.
+The flip is two 3D faces on a `.tile__inner`: the back face is pre-rotated 180
+degrees and carries the score colour, so rotating the inner 180 degrees reveals
+it with no colour swap in JS. A per-cell `transitionDelay` staggers the row
+left to right.
 </script>
 
 <script type="file/plain" data-name="wordle-daily/server.mjs">
@@ -426,7 +481,7 @@ export default function App() {
       }
       setCopyState('Copied.');
     } catch {
-      setCopyState('Copy failed — the grid is above, copy it manually.');
+      setCopyState('Copy failed, copy the grid manually.');
     }
     setTimeout(() => setCopyState(''), 2500);
   }
@@ -435,14 +490,14 @@ export default function App() {
     <main className="wrap">
       <header className="head">
         <h1>WORDLE</h1>
-        <p className="sub">{ANSWERS.length} bundled answers · same word all day</p>
+        <p className="sub">{ANSWERS.length} bundled answers, same word all day</p>
       </header>
 
       <div role="status" aria-live="polite" className="banner">
-        {g.status === 'idle' && `Row ${g.turn + 1} of 6`}
-        {g.status === 'won' && `Solved in ${g.guesses} — ${g.answer.toUpperCase()}`}
-        {g.status === 'lost' && `Answer: ${g.answer.toUpperCase()}`}
-        {copyState && ` · ${copyState}`}
+        {g.status === 'idle' && 'Row ' + (g.turn + 1) + ' of 6'}
+        {g.status === 'won' && 'Solved in ' + g.guesses + ', ' + g.answer.toUpperCase()}
+        {g.status === 'lost' && 'Answer: ' + g.answer.toUpperCase()}
+        {copyState ? ' ' + copyState : ''}
       </div>
 
       <Board rows={g.rows} current={g.current} shakeToken={g.shakeToken} />
@@ -483,19 +538,19 @@ export const COLS = 5;
 
 const RANK = { absent: 1, present: 2, correct: 3 };
 
-/** Every guess must be a real 5-letter word, not just the right length. */
+/** Every guess must be a real five-letter word, not merely the right length. */
 export function isGuess(word) {
   return typeof word === 'string' && word.length === COLS && ALLOWED.has(word.toLowerCase());
 }
 
 /**
- * Two-pass scorer — this is the whole duplicate-letter rule.
+ * Two-pass scorer. This is the whole duplicate-letter rule.
  *
  *  1. Greens claim their slot first and consume that answer letter.
- *  2. Yellows are handed out from the letters that survive step 1 only.
+ *  2. Yellows are handed out only from the letters surviving step 1.
  *
- * A second 'e' in the guess is therefore 'absent' when the answer has one
- * spare 'e', which is the case naive single-pass implementations get wrong.
+ * So a second 'e' in the guess is 'absent' when the answer has a single spare
+ * 'e', which is exactly the case a single-pass implementation gets wrong.
  */
 export function scoreGuess(guess, answer) {
   const g = String(guess).toLowerCase();
@@ -529,7 +584,7 @@ export function scoreGuess(guess, answer) {
   return { result, isWin };
 }
 
-/** Merge a guess into the keyboard map without ever downgrading a letter. */
+/** Merge a guess into the keyboard map, never downgrading a letter. */
 export function mergeUsed(used, guess, result) {
   const next = { ...used };
   for (let i = 0; i < guess.length; i++) {
@@ -539,14 +594,14 @@ export function mergeUsed(used, guess, result) {
   return next;
 }
 
-/** YYYY-MM-DD in the viewer's own timezone — the daily key, not UTC. */
+/** YYYY-MM-DD in the viewer's own timezone, not UTC. */
 export function todayKey(d = new Date()) {
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
-  return `${d.getFullYear()}-${m}-${day}`;
+  return d.getFullYear() + '-' + m + '-' + day;
 }
 
-/** FNV-1a: same date in, same index out, no server involved. */
+/** FNV-1a: same date in, same index out, no server required. */
 export function dailyIndex(dateKey, length) {
   let h = 2166136261;
   for (let i = 0; i < dateKey.length; i++) {
@@ -561,7 +616,6 @@ export function answerForDate(dateKey = todayKey()) {
 }
 
 export { ANSWERS, EXTRA };
-export const ALLOWED = new Set([...ANSWERS, ...EXTRA]);
 </script>
 
 <script type="file/plain" data-name="wordle-daily/src/game/wordle.test.js">
@@ -576,16 +630,16 @@ describe('scoreGuess', () => {
   });
 
   it('leaves a duplicate yellow when the answer has one spare', () => {
-    // answer has exactly one 'e'; the guess has two.
-    const { result } = scoreGuess('eerie', 'eight');
-    expect(result[0]).toBe('correct'); // leading e lines up
-    expect(result[1]).toBe('absent'); // the spare 'e' is used up
-    expect(result[3]).toBe('present');
+    const out = scoreGuess('eerie', 'eight');
+    expect(out.result[0]).toBe('correct'); // leading e lines up
+    expect(out.result[1]).toBe('absent'); // the spare e is used up
+    expect(out.result[3]).toBe('present');
   });
 
   it('hands out yellows only from letters greens did not consume', () => {
-    const { result } = scoreGuess('speed', 'erase');
-    expect(result).toEqual(['present', 'absent', 'present', 'present', 'absent']);
+    expect(scoreGuess('speed', 'erase').result).toEqual([
+      'present', 'absent', 'present', 'present', 'absent',
+    ]);
   });
 
   it('reports a win only on a full match', () => {
@@ -645,7 +699,7 @@ function loadStats() {
     if (!raw) return { ...EMPTY_STATS };
     return { ...EMPTY_STATS, ...JSON.parse(raw) };
   } catch {
-    return { ...EMPTY_STATS }; // private mode / corrupt JSON
+    return { ...EMPTY_STATS }; // private mode, or corrupt JSON
   }
 }
 
@@ -653,7 +707,7 @@ function saveStats(stats) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
   } catch {
-    /* storage disabled — play on, score just will not persist */
+    /* storage disabled, play on, the score just will not persist */
   }
 }
 
@@ -669,7 +723,7 @@ function initialState() {
     turn: 0,
     guesses: 0,
     status: 'idle', // idle | won | lost
-    shakeToken: 0, // bumped on a rejected guess so the animation replays
+    shakeToken: 0, // bumped on a rejected guess so the shake actually replays
     usedLetters: {},
     stats: loadStats(),
   };
@@ -730,7 +784,7 @@ function reducer(state, action) {
     }
 
     case 'reset': {
-      // Carry the answer and the scoreboard across the reset. Calling
+      // Carry the answer and the scoreboard across the reset. Spreading
       // initialState() wholesale used to re-read localStorage here and wipe
       // anything earned in the current session.
       return { ...initialState(), answer: state.answer, stats: state.stats };
@@ -751,12 +805,12 @@ export function useWordle() {
   }, []);
 
   const shareText = useCallback(() => {
-    const header = `Wordle Daily ${state.guesses}/${ROWS}${state.status === 'won' ? '' : 'X'}`;
+    const header = 'Wordle Daily ' + state.guesses + '/' + ROWS + (state.status === 'won' ? '' : 'X');
     const grid = state.rows
       .filter((r) => r.result)
       .map((r) => r.result.map((s) => (s === 'correct' ? '🟩' : s === 'present' ? '🟨' : '⬜')).join(''))
       .join('\n');
-    return `${header}\n\n${grid}`;
+    return header + '\n\n' + grid;
   }, [state.rows, state.guesses, state.status]);
 
   return {
@@ -781,12 +835,11 @@ export default function Board({ rows, current, shakeToken }) {
       {rows.map((row, i) => {
         const isActive = i === activeIndex;
         const letter = row.result ? row.guess : isActive ? current.padEnd(5, ' ') : '';
-        // Re-key the active row on every rejected guess so the shake
+        // Re-key the active row on every rejected guess, so the shake
         // animation restarts instead of silently no-op'ing on a repeat.
-        const key = `${i}-${isActive ? shakeToken : 0}`;
         return (
           <Row
-            key={key}
+            key={i + '-' + (isActive ? shakeToken : 0)}
             index={i}
             guess={letter}
             result={row.result}
@@ -816,13 +869,13 @@ export default function Row({ index, guess, result, active, shake }) {
         const score = result ? result[i] : null;
         return (
           <div
-            className="tile"
+            className={'tile' + (score ? ' is-revealed' : '')}
             key={i}
-            style={score ? { transitionDelay: `${i * 110}ms` } : undefined}
+            style={score ? { transitionDelay: i * 110 + 'ms' } : undefined}
           >
             <div className="tile__inner">
               <div className="tile__face tile__face--front">{letter}</div>
-              <div className={`tile__face tile__face--back${score ? ` is-${score}` : ''}`}>
+              <div className={'tile__face tile__face--back' + (score ? ' is-' + score : '')}>
                 {letter}
               </div>
             </div>
@@ -839,15 +892,10 @@ const ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 
 function Key({ k, label, used, onKey, wide }) {
   const cls = ['key'];
-  if (used) cls.push(`is-${used}`);
+  if (used) cls.push('is-' + used);
   if (wide) cls.push('key--wide');
   return (
-    <button
-      type="button"
-      className={cls.join(' ')}
-      onClick={() => onKey(k)}
-      aria-label={k}
-    >
+    <button type="button" className={cls.join(' ')} onClick={() => onKey(k)} aria-label={k}>
       {label || k}
     </button>
   );
@@ -858,11 +906,11 @@ export default function Keyboard({ used, onKey }) {
     <div className="keyboard">
       {ROWS.map((letters, r) => (
         <div className="keyboard__row" key={r}>
-          {r === 2 && <Key k="Enter" label="ENTER" used={null} onKey={onKey} wide />}
+          {r === 2 ? <Key k="Enter" label="ENTER" used={null} onKey={onKey} wide /> : null}
           {[...letters].map((c) => (
             <Key key={c} k={c} used={used[c]} onKey={onKey} />
           ))}
-          {r === 2 && <Key k="Backspace" label="⌫" used={null} onKey={onKey} wide />}
+          {r === 2 ? <Key k="Backspace" label="⌫" used={null} onKey={onKey} wide /> : null}
         </div>
       ))}
     </div>
@@ -881,7 +929,6 @@ export default function Keyboard({ used, onKey }) {
   --green: #538d4e;
   --yellow: #b59f3b;
   --grey: #3a3a3c;
-  --accent: #6ea8fe;
 }
 
 * { box-sizing: border-box; }
@@ -907,24 +954,13 @@ body {
 .head h1 { margin: 0; font-size: 30px; letter-spacing: 0.14em; }
 .sub { margin: 4px 0 0; color: var(--dim); font-size: 12.5px; }
 
-.banner {
-  width: 100%;
-  text-align: center;
-  font-size: 13.5px;
-  min-height: 20px;
-  color: var(--dim);
-}
+.banner { width: 100%; text-align: center; font-size: 13.5px; min-height: 20px; color: var(--dim); }
 
 /* ---------- board ---------- */
 .board { display: grid; gap: 6px; }
 .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 
-.tile {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  perspective: 600px;
-}
+.tile { position: relative; width: 100%; aspect-ratio: 1 / 1; perspective: 600px; }
 
 .tile__inner {
   position: absolute;
@@ -956,7 +992,6 @@ body {
 .tile__face--back.is-absent  { background: var(--grey); }
 
 .row--active .tile__face--front { border-color: #56585b; }
-.row--active .tile__face--front:has(span:not(:empty)) { transform: scale(1.04); }
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
@@ -1030,8 +1065,8 @@ body {
 </script>
 
 <script type="file/plain" data-name="wordle-daily/src/data/words.js">
-// Five-letter ANSWERS. Every player on a given date gets the same one,
-// picked by the FNV-1a hash in src/game/wordle.js.
+// Five-letter ANSWERS. The daily answer is picked by the FNV-1a hash in
+// src/game/wordle.js, so everyone on a date gets the same word.
 export const ANSWERS = [
   'about', 'above', 'actor', 'acute', 'admit', 'adopt', 'after', 'again', 'agent',
   'agree', 'ahead', 'alarm', 'album', 'alert', 'alike', 'alive', 'allow', 'alone',
@@ -1109,206 +1144,200 @@ export const ANSWERS = [
   'zebra',
 ];
 
-// Acceptable guesses — broader than the answer list so players are not blocked.
+// Acceptable guesses, broader than the answer list so players are not blocked.
 export const EXTRA = [
-  'abacus', 'abbey', 'abdomen', 'abide', 'abject', 'absorb', 'abuse', 'acorn',
-  'acrid', 'acumen', 'adage', 'adept', 'adhere', 'adieu', 'adjoin', 'admin',
-  'adverb', 'aerial', 'affix', 'afford', 'agile', 'agony', 'agree', 'ahoy',
-  'aide', 'aimless', 'aioli', 'alcove', 'alder', 'algae', 'alias', 'alibi',
-  'alien', 'alike', 'allay', 'alley', 'aloof', 'aloud', 'alpha', 'amber',
-  'amble', 'amend', 'ample', 'amuse', 'anagram', 'ancho', 'anemone', 'anew',
-  'anoint', 'antic', 'anode', 'antsy', 'anvil', 'apex', 'aphid', 'aphobia',
-  'apron', 'arbor', 'arcane', 'arid', 'armory', 'aroma', 'arouse', 'artisan',
+  'abbey', 'abide', 'abyss', 'acorn', 'acrid', 'acro', 'adage', 'adept', 'adhere',
+  'adieu', 'adjoin', 'admin', 'adverb', 'aerial', 'affix', 'afford', 'agile', 'agony',
+  'aide', 'alcove', 'alder', 'algae', 'alias', 'alibi', 'alien', 'allay', 'alley',
+  'aloof', 'aloud', 'alpha', 'amber', 'amble', 'amend', 'ample', 'amuse', 'anagram',
+  'ancho', 'anemone', 'anew', 'anoint', 'antic', 'anode', 'antsy', 'anvil', 'apex',
+  'aphid', 'apron', 'arbor', 'arcane', 'arid', 'armory', 'aroma', 'arouse', 'artisan',
   'ascend', 'ashore', 'aspen', 'asphalt', 'assail', 'aster', 'astray', 'atlas',
-  'attic', 'augur', 'aunty', 'avert', 'aviator', 'awry', 'azure', 'badger',
-  'balcony', 'bandit', 'banjo', 'barb', 'barge', 'barley', 'barrel', 'basalt',
-  'bayou', 'beget', 'behemoth', 'belfry', 'bemoan', 'berate', 'beseech', 'bezoar',
-  'bicep', 'bikini', 'billow', 'bistro', 'bland', 'blazer', 'bleat', 'blight',
-  'blimp', 'blond', 'blotch', 'blowgun', 'bluejay', 'boa', 'bogus', 'boister',
-  'bologna', 'bonanza', 'boozer', 'borsch', 'bovine', 'brace', 'brackish', 'braid',
-  'bran', 'brassy', 'bravado', 'bray', 'breadbox', 'breeze', 'brigade', 'brine',
-  'brisket', 'broil', 'bronco', 'broth', 'bunco', 'bunion', 'burly', 'burnish',
-  'bylaw', 'cabbage', 'cackle', 'cactus', 'camel', 'canary', 'candle', 'canoe',
-  'caper', 'capon', 'capsize', 'caravan', 'carbide', 'carol', 'carve', 'castanet',
-  'catnip', 'caviar', 'cedar', 'cellar', 'cement', 'census', 'ceramic', 'chafe',
-  'chalice', 'chamber', 'chant', 'chapel', 'chariot', 'charm', 'chartreuse',
-  'cheddar', 'chemo', 'chess', 'chisel', 'chowder', 'cilantro', 'cinch', 'cinder',
-  'circuit', 'cistern', 'citadel', 'clamor', 'clandestine', 'clause', 'cleaver',
-  'clover', 'clutch', 'coaster', 'cobweb', 'cockpit', 'cocoa', 'cognac', 'coiled',
-  'colonel', 'coma', 'combine', 'comet', 'compote', 'concave', 'conduit', 'conifer',
-  'consul', 'convex', 'cootie', 'cophenhagen', 'cornea', 'cornice', 'corridor',
-  'corsage', 'cortege', 'cottage', 'coupon', 'courier', 'cowboy', 'cranny', 'crayon',
-  'cremate', 'creole', 'crepe', 'crescent', 'crevice', 'cricket', 'crimson',
-  'crinkly', 'crisper', 'crochet', 'cronut', 'croon', 'crossbow', 'crouton',
-  'crucial', 'crumhorn', 'crusade', 'cubit', 'cuckoo', 'cuddle', 'culotte', 'cupola',
-  'curative', 'curfew', 'curio', 'cursive', 'cushion', 'cutlery', 'cutlet', 'cyclone',
-  'cymbal', 'cypress', 'daikon', 'damsel', 'dandelion', 'dapple', 'daybreak', 'daytime',
-  'debris', 'decanter', 'decibel', 'decree', 'defect', 'defile', 'degree', 'deluge',
-  'denim', 'dermal', 'desk', 'detox', 'develop', 'dewdrop', 'dexter', 'dialect',
-  'diesel', 'dietary', 'diligent', 'dinghy', 'diorama', 'dipstick', 'disco', 'discus',
-  'dishpan', 'dispel', 'dissent', 'dither', 'dividend', 'docket', 'dodgy', 'doghouse',
-  'dogsled', 'dollop', 'dolphin', 'dominion', 'donut', 'dossier', 'dovetail', 'dozen',
-  'drab', 'dragnet', 'dredge', 'drivel', 'drowsy', 'druid', 'dulcet', 'dumpling',
-  'durable', 'dynamo', 'eagle', 'earlobe', 'earnest', 'earring', 'earthen', 'easel',
-  'edict', 'effigy', 'effort', 'eiderdown', 'elbow', 'elixir', 'ellipse', 'embargo',
-  'emblem', 'embrace', 'emcee', 'emerald', 'emote', 'empire', 'enamel', 'enchant',
-  'encompass', 'endive', 'engine', 'engulf', 'enigma', 'entreat', 'envelope', 'enzyme',
-  'epaulet', 'epoch', 'equable', 'equator', 'equinox', 'errand', 'errant', 'errata',
-  'espresso', 'espresso', 'etching', 'ether', 'eucalypt', 'eulogy', 'evaporate',
-  'evasion', 'evolute', 'excavate', 'exceed', 'excerpt', 'exhale', 'exodus', 'exorbit',
-  'expanse', 'expatiate', 'extravagant', 'exuberant', 'fabric', 'faceted', 'factoid',
-  'fallow', 'falsehood', 'falter', 'famished', 'fandango', 'fang', 'fathom', 'faucet',
-  'fawn', 'feasible', 'fedora', 'feline', 'fellowship', 'fennel', 'ferment', 'fervent',
-  'festoon', 'fiancée', 'fickle', 'fidget', 'filament', 'filbert', 'filibuster',
-  'finery', 'finger', 'finicky', 'finite', 'firkin', 'fissure', 'fistful', 'fixture',
-  'flagon', 'flamingo', 'flannel', 'flask', 'fleece', 'flint', 'florid', 'flotsam',
-  'flume', 'fluted', 'foible', 'foliage', 'folly', 'foment', 'founder', 'foxhole',
-  'fracas', 'fractal', 'fracture', 'frail', 'franchise', 'fraternal', 'frenzy',
-  'friar', 'frigate', 'frivolous', 'frizzle', 'frock', 'frugal', 'fulcrum', 'furlong',
-  'gable', 'gadfly', 'gaiety', 'galleon', 'gambit', 'gable', 'gargoyle', 'garland',
-  'garnish', 'gauche', 'gauze', 'gavel', 'gazebo', 'gelatin', 'gemstone', 'geode',
-  'germinate', 'gherkin', 'giggle', 'gilder', 'gill', 'ginger', 'girder', 'glade',
+  'attic', 'augur', 'aunty', 'avert', 'aviator', 'awry', 'azure', 'badger', 'baldly',
+  'balmy', 'bandit', 'banjo', 'barge', 'barley', 'barrel', 'basalt', 'bayou',
+  'beget', 'behemoth', 'belfry', 'bemoan', 'berate', 'beseech', 'bezoar', 'bicep',
+  'bikini', 'billow', 'bistro', 'blazer', 'bleat', 'blight', 'blimp', 'blond',
+  'blotch', 'blowgun', 'bogie', 'boister', 'bonanza', 'boozer', 'borsch', 'bovine',
+  'brace', 'brackish', 'braid', 'bran', 'brassy', 'bravado', 'brine', 'brisket',
+  'broil', 'bronco', 'broth', 'bunco', 'bunion', 'burly', 'burnish', 'bylaw',
+  'cabbage', 'cackle', 'cactus', 'camel', 'canary', 'candle', 'canoe', 'caper',
+  'capon', 'capsize', 'caravan', 'carbide', 'carol', 'castanet', 'catnip', 'caviar',
+  'cedar', 'cellar', 'cement', 'census', 'ceramic', 'chafe', 'chalice', 'chamber',
+  'chant', 'chapel', 'chariot', 'charm', 'cheddar', 'chisel', 'chowder', 'cilantro',
+  'cinder', 'circuit', 'cistern', 'citadel', 'clamor', 'clause', 'cleaver', 'clover',
+  'clutch', 'coaster', 'cobweb', 'cockpit', 'cocoa', 'cognac', 'colonel', 'coma',
+  'combine', 'compote', 'concave', 'conduit', 'conifer', 'consul', 'convex', 'cootie',
+  'cornea', 'cornice', 'corridor', 'corsage', 'cortege', 'cottage', 'coupon',
+  'courier', 'cowboy', 'cranny', 'crayon', 'cremate', 'creole', 'crepe', 'crescent',
+  'crevice', 'cricket', 'crimson', 'crinkly', 'crisper', 'crochet', 'croon',
+  'crossbow', 'crouton', 'crucial', 'crusade', 'cubit', 'cuckoo', 'cuddle', 'cupola',
+  'curative', 'curfew', 'curio', 'cursive', 'cushion', 'cutlery', 'cutlet',
+  'cyclone', 'cymbal', 'cypress', 'daikon', 'damsel', 'dapple', 'daybreak',
+  'daytime', 'debris', 'decanter', 'decibel', 'decree', 'defect', 'defile', 'degree',
+  'deluge', 'denim', 'dermal', 'detox', 'dewdrop', 'dextro', 'dialect', 'diesel',
+  'diligent', 'dinghy', 'diorama', 'dipstick', 'disco', 'discus', 'dishpan',
+  'dispel', 'dissent', 'dither', 'dividend', 'docket', 'dodgy', 'doghouse',
+  'dollop', 'dolphin', 'dominion', 'donut', 'dossier', 'dovetail', 'dragnet',
+  'dredge', 'drivel', 'drowsy', 'druid', 'dulcet', 'dumpling', 'durable', 'dynamo',
+  'earlobe', 'earnest', 'earring', 'earthen', 'easel', 'edict', 'effigy', 'effort',
+  'eiderdown', 'elixir', 'ellipse', 'embargo', 'emblem', 'embrace', 'emcee',
+  'emerald', 'emote', 'empire', 'enamel', 'enchant', 'endive', 'engine', 'engulf',
+  'enigma', 'entreat', 'envelope', 'enzyme', 'epaulet', 'epoch', 'equable',
+  'equator', 'equinox', 'errand', 'errant', 'errata', 'etching', 'ether',
+  'eucalypt', 'eulogy', 'evaporate', 'evasion', 'excavate', 'exceed', 'excerpt',
+  'exhale', 'exodus', 'expanse', 'extravagant', 'exuberant', 'fabric', 'faceted',
+  'fallow', 'falter', 'famished', 'fandango', 'fathom', 'faucet', 'fawn', 'feasible',
+  'fedora', 'feline', 'fennel', 'ferment', 'fervent', 'festoon', 'fickle', 'fidget',
+  'filament', 'filbert', 'finery', 'fingery', 'finicky', 'finite', 'firkin',
+  'fissure', 'fistful', 'fixture', 'flagon', 'flamingo', 'flannel', 'flask',
+  'fleece', 'flint', 'florid', 'flotsam', 'flume', 'fluted', 'foible', 'foliage',
+  'folly', 'foment', 'founder', 'foxhole', 'fracas', 'fractal', 'fracture', 'frail',
+  'franchise', 'frenzy', 'friar', 'frigate', 'frizzle', 'frock', 'frugal',
+  'fulcrum', 'furlong', 'gable', 'gadfly', 'gaiety', 'galleon', 'gambit', 'gargoyle',
+  'garland', 'garnish', 'gauche', 'gauze', 'gavel', 'gazebo', 'gelatin', 'gemstone',
+  'geode', 'germinate', 'gherkin', 'giggle', 'gilder', 'ginger', 'girder', 'glade',
   'glean', 'glisten', 'glucose', 'gnomon', 'goblet', 'goggles', 'gopher', 'gorge',
   'gosling', 'gourd', 'grapple', 'grate', 'gravel', 'grebe', 'griddle', 'grommet',
   'grouch', 'grouse', 'guava', 'gudgeon', 'guitar', 'gullet', 'gully', 'gusto',
   'gutter', 'gymnasium', 'gypsum', 'halcyon', 'halibut', 'hallmark', 'hallow',
   'halves', 'hamlet', 'hamper', 'handbag', 'handy', 'hanger', 'harbinger', 'harden',
   'harmonica', 'harness', 'harpoon', 'harvest', 'hasten', 'hatchery', 'haughty',
-  'haven', 'hazard', 'hazelnut', 'headlock', 'hearth', 'hearten', 'heathen', 'heather',
-  'hefty', 'helix', 'helmet', 'hemlock', 'hermit', 'heron', 'hessian', 'hexagon',
-  'hickory', 'hillside', 'hinge', 'hoard', 'hobble', 'hodgepodge', 'hoist', 'holly',
+  'haven', 'hazard', 'hazelnut', 'headlock', 'hearth', 'hearten', 'heathen',
+  'heather', 'hefty', 'helix', 'helmet', 'hemlock', 'hermit', 'heron', 'hessian',
+  'hexagon', 'hickory', 'hillside', 'hinge', 'hoard', 'hobble', 'hoist', 'holly',
   'homestead', 'honeydew', 'horizon', 'hormone', 'hornet', 'hostel', 'hovel', 'hubbub',
-  'huddle', 'huffle', 'hullabaloo', 'humanity', 'hurdle', 'hutch', 'hyacinth', 'hydrant',
-  'ibex', 'ibis', 'idyllic', 'ignite', 'iguana', 'impala', 'impede', 'imprint',
-  'impromptu', 'impulse', 'inborn', 'incense', 'incline', 'inertia', 'infantry', 'ingot',
-  'inhale', 'inkling', 'inland', 'inmate', 'innkeeper', 'inquiry', 'insulate', 'interim',
-  'intimate', 'intone', 'inundate', 'invoke', 'iodine', 'ire', 'iris', 'ironic',
-  'isle', 'itch', 'ivory', 'ivy', 'jackal', 'jacket', 'jamboree', 'jasmine', 'javelin',
-  'jazz', 'jellyfish', 'jerky', 'jester', 'jigsaw', 'jockey', 'jostle', 'jovial',
-  'joyful', 'jubilee', 'judo', 'juggler', 'jumbo', 'junta', 'jurist', 'karate',
-  'kayak', 'kelp', 'kennel', 'kernel', 'kestrel', 'kettle', 'keystone', 'keyword',
-  'khaki', 'kilogram', 'kindle', 'kiosk', 'kipper', 'kismet', 'kitchen', 'knead',
-  'knoll', 'koala', 'kudzu', 'label', 'labour', 'lace', 'lactic', 'ladder', 'lagoon',
-  'lament', 'laminate', 'lance', 'languid', 'lantern', 'lapel', 'lapse', 'larder',
-  'lariat', 'lasso', 'lather', 'latitude', 'lattice', 'launder', 'lavender', 'laxity',
-  'layup', 'leaflet', 'leaven', 'lectern', 'ledger', 'leeway', 'legume', 'lemur',
-  'lentil', 'leopard', 'lettuce', 'levity', 'lexicon', 'liberty', 'lichen', 'liftoff',
-  'lilac', 'limber', 'limestone', 'linen', 'linger', 'liquor', 'literacy', 'litre',
-  'livid', 'loafers', 'loam', 'lobster', 'locust', 'lodestar', 'loft', 'logic',
-  'logjam', 'lollop', 'longitude', 'loofah', 'loquat', 'lottery', 'lovemaking', 'lozenge',
+  'huddle', 'hurdle', 'hutch', 'hyacinth', 'hydrant', 'ibex', 'ibis', 'idyllic',
+  'ignite', 'iguana', 'impala', 'impede', 'imprint', 'impulse', 'inborn', 'incense',
+  'incline', 'inertia', 'infantry', 'ingot', 'inhale', 'inkling', 'inland', 'inmate',
+  'innkeeper', 'inquiry', 'insulate', 'interim', 'intimate', 'intone', 'inundate',
+  'invoke', 'iodine', 'iris', 'ironic', 'isle', 'itch', 'jackal', 'jacket',
+  'jamboree', 'jasmine', 'javelin', 'jellyfish', 'jester', 'jigsaw', 'jockey',
+  'jostle', 'jovial', 'joyful', 'jubilee', 'judo', 'juggler', 'jumbo', 'jurist',
+  'karate', 'kayak', 'kelp', 'kennel', 'kernel', 'kestrel', 'kettle', 'keystone',
+  'keyword', 'khaki', 'kilogram', 'kindle', 'kiosk', 'kipper', 'kismet', 'kitchen',
+  'knead', 'knoll', 'koala', 'kudzu', 'label', 'labour', 'lace', 'lactic', 'ladder',
+  'lagoon', 'lament', 'laminate', 'lance', 'languid', 'lantern', 'lapel', 'lapse',
+  'larder', 'lariat', 'lasso', 'lather', 'latitude', 'lattice', 'launder', 'lavender',
+  'laxity', 'layup', 'leaflet', 'leaven', 'lectern', 'ledger', 'leeway', 'legume',
+  'lemur', 'lentil', 'leopard', 'lettuce', 'levity', 'lexicon', 'liberty', 'lichen',
+  'liftoff', 'lilac', 'limber', 'limestone', 'linden', 'linger', 'liquor',
+  'literacy', 'litre', 'livid', 'loafers', 'loam', 'lobster', 'locust', 'lodestar',
+  'loft', 'logjam', 'lollop', 'longitude', 'loofah', 'loquat', 'lottery', 'lozenge',
   'lucid', 'luggage', 'lukewarm', 'lullaby', 'lumber', 'lustrous', 'lyric', 'macaw',
-  'machete', 'mackerel', 'madrigal', 'magnet', 'magnolia', 'mahogany', 'maize', 'mallard',
-  'mallet', 'mandolin', 'mango', 'mantis', 'marble', 'margin', 'marigold', 'marina',
-  'marlin', 'marmot', 'mascot', 'mastiff', 'matador', 'matrix', 'mattress', 'mature',
-  'maximum', 'meander', 'medley', 'melody', 'menace', 'mendicant', 'mentor', 'mercury',
-  'merger', 'mesa', 'mesquite', 'metaphor', 'meter', 'midriff', 'midstream', 'midway',
-  'mignon', 'mildew', 'militia', 'milliner', 'mimosa', 'mineral', 'minivan', 'minnow',
-  'minster', 'mire', 'misnomer', 'mistletoe', 'mistral', 'mittens', 'moccasin', 'modern',
-  'modular', 'mohair', 'molasses', 'mollusk', 'monarch', 'monolith', 'monsoon', 'montage',
-  'moraine', 'mortar', 'mosaic', 'mosque', 'motel', 'motif', 'mould', 'muffin', 'mulberry',
-  'mullet', 'municipal', 'munitions', 'mural', 'muskrat', 'mustard', 'mutton', 'myriad',
-  'nacre', 'nadir', 'narrative', 'nebula', 'necktie', 'nectarine', 'needle', 'nemesis',
-  'neonatal', 'nerd', 'nettle', 'network', 'nickel', 'nimbus', 'nocturne', 'nomad',
-  'nougat', 'novella', 'nozzle', 'nuance', 'nugget', 'nurture', 'oasis', 'obelisk',
-  'oblong', 'oboe', 'ocelot', 'octave', 'octet', 'ocular', 'oddity', 'odour', 'offset',
-  'ogive', 'okra', 'olfactory', 'olive', 'ombre', 'ominous', 'onion', 'onyx', 'opaque',
-  'opera', 'opine', 'optical', 'orbital', 'orchard', 'orchid', 'ordain', 'ordeal',
-  'orgy', 'orrery', 'osier', 'ostrich', 'otter', 'outcrop', 'outlay', 'outpost',
-  'ovary', 'oyster', 'paddle', 'pagoda', 'palate', 'pallid', 'palmist', 'pamphlet',
-  'pancake', 'pantry', 'papyrus', 'parapet', 'parcel', 'pariah', 'parlour', 'parsnip',
-  'partisan', 'passe', 'pasture', 'patina', 'pauper', 'pavilion', 'pawpaw', 'peccary',
-  'peddle', 'pekin', 'pelvis', 'penury', 'percale', 'periwig', 'permeate', 'petunia',
-  'pewter', 'phlox', 'phoenix', 'picayune', 'piedmont', 'pilaster', 'pincers', 'pinion',
-  'pinnacle', 'pintail', 'piquant', 'pistachio', 'pitcher', 'pithy', 'placid', 'plankton',
-  'plaza', 'plume', 'plywood', 'pocketful', 'podcast', 'podium', 'pomegranate',
-  'poncho', 'pontoon', 'poplar', 'poppy', 'porous', 'portico', 'possum', 'posture',
-  'pottery', 'poultry', 'poutine', 'prairie', 'prawn', 'preacher', 'premise', 'presage',
-  'pried', 'primrose', 'pristine', 'privet', 'prowl', 'prude', 'pumice', 'pupil',
-  'purlieu', 'putsch', 'pygmy', 'quaff', 'quagmire', 'quail', 'quaint', 'quarry',
-  'quasar', 'quaver', 'queasy', 'quench', 'querulous', 'quibble', 'quiche', 'quill',
-  'quince', 'quintet', 'quiver', 'quorum', 'quota', 'quotient', 'rabid', 'racoon',
-  'raddle', 'radiant', 'radish', 'rafter', 'ragtime', 'rampart', 'rancour', 'rapier',
-  'rapturous', 'rarer', 'raspberry', 'ravel', 'ravenous', 'ravine', 'razzmatazz', 'rebate',
-  'rebus', 'rebuttal', 'recalcitrant', 'receipt', 'recess', 'recluse', 'redolent',
-  'refractory', 'refurbish', 'regale', 'regimen', 'rehash', 'reindeer', 'rejoinder',
-  'rekindle', 'relic', 'reminiscent', 'remuneration', 'repartee', 'repose', 'reprieve',
-  'reproach', 'resinous', 'respite', 'restive', 'retch', 'reverie', 'rhetoric', 'rhubarb',
-  'riddle', 'rigour', 'riposte', 'risotto', 'rissole', 'rivulet', 'roadside', 'robust',
-  'rosette', 'rotisserie', 'rotund', 'roulette', 'roundabout', 'rowan', 'royal', 'rubble',
-  'rudder', 'ruin', 'ruminate', 'russet', 'sabre', 'saccharide', 'saddle', 'saffron',
+  'machete', 'mackerel', 'madrigal', 'magnet', 'magnolia', 'mahogany', 'maize',
+  'mallard', 'mallet', 'mandolin', 'mango', 'mantis', 'marble', 'margin', 'marigold',
+  'marina', 'marlin', 'marmot', 'mascot', 'mastiff', 'matador', 'matrix', 'mattress',
+  'meander', 'medley', 'melody', 'menace', 'mendicant', 'mentor', 'mercury',
+  'merger', 'mesa', 'mesquite', 'metaphor', 'midriff', 'midstream', 'midway', 'mignon',
+  'mildew', 'militia', 'milliner', 'mimosa', 'mineral', 'minivan', 'minnow',
+  'minster', 'misnomer', 'mistletoe', 'mistral', 'mittens', 'moccasin', 'modular',
+  'mohair', 'molasses', 'mollusk', 'monarch', 'monolith', 'monsoon', 'montage',
+  'moraine', 'mortar', 'mosaic', 'mosque', 'motel', 'motif', 'mould', 'muffin',
+  'mulberry', 'mullet', 'municipal', 'mural', 'muskrat', 'mustard', 'mutton',
+  'myriad', 'nacre', 'nadir', 'narrative', 'nebula', 'necktie', 'nectarine', 'needle',
+  'nemesis', 'neonatal', 'nettle', 'network', 'nickel', 'nimbus', 'nocturne',
+  'nomad', 'nougat', 'novella', 'nozzle', 'nuance', 'nugget', 'nurture', 'oasis',
+  'obelisk', 'oblong', 'oboe', 'ocelot', 'octave', 'octet', 'ocular', 'oddity',
+  'offset', 'ogive', 'okra', 'olfactory', 'ombre', 'ominous', 'onyx', 'opaque',
+  'opine', 'optical', 'orbital', 'orchard', 'orchid', 'ordain', 'ordeal', 'orrery',
+  'osier', 'ostrich', 'otter', 'outcrop', 'outlay', 'outpost', 'ovary', 'oyster',
+  'paddle', 'pagoda', 'palate', 'pallid', 'palmist', 'pamphlet', 'pancake', 'pantry',
+  'papyrus', 'parapet', 'parcel', 'pariah', 'parlour', 'parsnip', 'partisan',
+  'passe', 'pasture', 'patina', 'pauper', 'pavilion', 'pawpaw', 'peccary', 'peddle',
+  'pekin', 'pelvis', 'penury', 'percale', 'periwig', 'permeate', 'petunia', 'pewter',
+  'phlox', 'phoenix', 'piedmont', 'pilaster', 'pincers', 'pinion', 'pinnacle',
+  'pintail', 'piquant', 'pistachio', 'pitcher', 'pithy', 'placid', 'plankton',
+  'plume', 'plywood', 'pocketful', 'podium', 'pomegranate', 'poncho', 'pontoon',
+  'poplar', 'poppy', 'porous', 'portico', 'possum', 'posture', 'pottery', 'poultry',
+  'poutine', 'prairie', 'prawn', 'preacher', 'premise', 'presage', 'primrose',
+  'privet', 'prude', 'pumice', 'purlieu', 'putsch', 'pygmy', 'quaff', 'quagmire',
+  'quail', 'quaint', 'quarry', 'quasar', 'quaver', 'queasy', 'quench', 'querulous',
+  'quibble', 'quiche', 'quill', 'quince', 'quintet', 'quiver', 'quorum', 'quota',
+  'quotient', 'rabid', 'raddle', 'radiant', 'radish', 'rafter', 'ragtime',
+  'rampart', 'rancour', 'rapier', 'rapturous', 'raspberry', 'ravel', 'ravenous',
+  'ravine', 'rebus', 'rebuttal', 'receipt', 'recess', 'recluse', 'redolent',
+  'refurbish', 'regale', 'regimen', 'rehash', 'reindeer', 'rejoinder', 'rekindle',
+  'relic', 'reminiscent', 'repartee', 'repose', 'reprieve', 'reproach', 'resinous',
+  'respite', 'restive', 'reverie', 'rhetoric', 'rhubarb', 'riddle', 'rigour',
+  'riposte', 'risotto', 'rissole', 'rivulet', 'roadside', 'robust', 'rosette',
+  'rotisserie', 'rotund', 'roulette', 'roundabout', 'rowan', 'rubble', 'rudder',
+  'ruin', 'ruminate', 'russet', 'sabre', 'saccharide', 'saddle', 'saffron',
   'sagacity', 'salient', 'saliva', 'sallow', 'salmon', 'saloon', 'saltire', 'salvage',
-  'samovar', 'sandal', 'sardonic', 'satchel', 'satin', 'saucepan', 'savoury', 'sawdust',
-  'scabbard', 'scallop', 'scampi', 'scantling', 'scapula', 'scarab', 'scenic', 'sceptic',
-  'scholar', 'scoff', 'scorpion', 'scourge', 'screw', 'scribble', 'scrimp', 'script',
-  'scrofula', 'sculptor', 'seamy', 'seascape', 'seclude', 'secular', 'sediment',
-  'seethe', 'segment', 'selvage', 'seminar', 'sepia', 'sequel', 'serenade', 'serene',
-  'serf', 'serrate', 'sesame', 'settee', 'sewage', 'shale', 'shamble', 'shanty',
-  'shard', 'shawl', 'sheath', 'shied', 'shingle', 'shipwright', 'shoal', 'shrapnel',
-  'shredder', 'shrewd', 'shrubbery', 'shuffle', 'shutter', 'sibling', 'sienna', 'silage',
-  'silhouette', 'simper', 'sinecure', 'singe', 'sitcom', 'sizzle', 'skiff', 'skillet',
-  'skydive', 'skylark', 'slalom', 'sledge', 'sleight', 'sliver', 'sloth', 'slouch',
-  'slovenly', 'slugger', 'slur', 'smelt', 'smitten', 'smock', 'snuggle', 'sociable',
-  'sonnet', 'sorbet', 'soulful', 'southerly', 'spaniel', 'sparse', 'spatula', 'spigot',
-  'spinach', 'spindrift', 'spinnaker', 'splendid', 'splinter', 'splurge', 'spoiler',
-  'spool', 'sporran', 'spotlight', 'spume', 'squeamish', 'staccato', 'stalactite',
-  'stallion', 'stanza', 'staple', 'starch', 'stasis', 'staunch', 'steeple', 'stellar',
-  'stenosis', 'stipple', 'stoic', 'stoutish', 'strudel', 'stucco', 'studious', 'sturdy',
-  'subway', 'succour', 'sudden', 'suffer', 'sugar', 'sultana', 'sunspot', 'surfeit',
-  'surly', 'suspect', 'sustenance', 'swaddle', 'swanky', 'swarthy', 'swashbuckler',
-  'swelter', 'sycamore', 'synthesis', 'syrup', 'tabloid', 'taciturn', 'tadpole', 'taffeta',
-  'talisman', 'tambourine', 'tangential', 'tanker', 'tanner', 'tantalize', 'tapir',
-  'tarragon', 'tartar', 'tassel', 'tattered', 'taunt', 'tavern', 'teakettle', 'teaspoon',
-  'tectonic', 'temerity', 'tempera', 'temperate', 'temple', 'tenderloin', 'tenement',
-  'tenor', 'tension', 'tentacle', 'tepid', 'terminal', 'terrace', 'terrarium', 'terse',
-  'tessellate', 'testify', 'texture', 'thatch', 'thaw', 'theatre', 'theology', 'thermal',
-  'thicket', 'thimble', 'thistle', 'thorax', 'thoroughfare', 'threshold', 'throttle',
-  'thrush', 'thunder', 'thwart', 'tibia', 'timbre', 'tinder', 'tinsel', 'tiptoe',
-  'tirade', 'tissue', 'titanic', 'toboggan', 'tolerance', 'tomato', 'tomboy', 'topaz',
-  'topical', 'topple', 'torchlight', 'torrent', 'tortoise', 'totem', 'toucan', 'toward',
-  'towel', 'trapeze', 'trapezi', 'trestle', 'tribute', 'triceps', 'trifle', 'trilogy',
-  'trinket', 'triumphal', 'trivial', 'trolley', 'trombone', 'trophy', 'trowel', 'truant',
-  'truffle', 'trumpet', 'tufted', 'tulip', 'tumble', 'tundra', 'tunnel', 'turban',
-  'turbine', 'turmoil', 'turnip', 'turquoise', 'turret', 'turtle', 'tussle', 'twilight',
-  'typhoon', 'udder', 'ulcer', 'umbrella', 'uncanny', 'uncle', 'underdog', 'undulate',
-  'unfurl', 'unicorn', 'unify', 'unison', 'unravel', 'unwind', 'upbeat', 'upend',
-  'upholstery', 'upright', 'upriver', 'uproar', 'uptake', 'urbanize', 'urchin', 'urgency',
-  'usable', 'vacancy', 'vagary', 'valiant', 'valour', 'vandal', 'vaporise', 'variegate',
-  'vaudeville', 'veneer', 'venerable', 'venison', 'veracity', 'verdant', 'verdigris',
-  'veritable', 'vertigo', 'vestibule', 'vestige', 'vexation', 'viaduct', 'vibrant',
-  'vicarious', 'viceroy', 'vicinity', 'victor', 'vigil', 'vigorous', 'village', 'villain',
-  'vinaigrette', 'vinegar', 'vintage', 'vintner', 'violet', 'viper', 'virtue', 'viscount',
-  'visor', 'vocalist', 'vocation', 'volcano', 'voltage', 'voluminous', 'voodoo', 'voyage',
-  'waffle', 'waggish', 'wagon', 'wainscot', 'waistband', 'wallow', 'wampum', 'wanderlust',
-  'waning', 'wanton', 'wardrobe', 'warehouse', 'wariness', 'warpath', 'warrantee',
-  'wary', 'washerwoman', 'watchful', 'waterlogged', 'wattle', 'wazir', 'weakling',
-  'weasel', 'weathered', 'webbing', 'wedge', 'weedy', 'weevil', 'welder', 'welsher',
-  'werewolf', 'westerly', 'wetland', 'whalebone', 'wheatish', 'whence', 'wherewithal',
-  'whetstone', 'whiff', 'whimsical', 'whinny', 'whipping', 'whirlpool', 'whisker',
-  'whisper', 'whistle', 'whitewash', 'whorl', 'wicker', 'wicket', 'widen', 'widget',
-  'wield', 'wight', 'wiggle', 'wilder', 'wily', 'wince', 'winch', 'windfall', 'windmill',
-  'windowpane', 'windsock', 'wisp', 'wisdom', 'wisteria', 'wistful', 'wits', 'wombat',
-  'wonderland', 'wooden', 'woolly', 'wordplay', 'workbench', 'worried', 'worrying',
-  'worthwhile', 'wrangle', 'wrangler', 'wreath', 'wreckage', 'wren', 'wrestle', 'wring',
-  'wrinkle', 'xenophobia', 'xylophone', 'yardstick', 'yearling', 'yonder', 'zealous',
-  'zenith', 'zeppelin', 'zigzag', 'zinnia', 'zipper', 'zircon', 'zodiac', 'zucchini',
+  'samovar', 'sandal', 'sardonic', 'satchel', 'satin', 'saucepan', 'savoury',
+  'sawdust', 'scabbard', 'scallop', 'scampi', 'scantling', 'scapula', 'scarab',
+  'scenic', 'scholar', 'scorpion', 'scourge', 'scribble', 'scrimp', 'script',
+  'scultor', 'seamy', 'seascape', 'seclude', 'secular', 'sediment', 'seethe',
+  'segment', 'selvage', 'seminar', 'sepia', 'sequel', 'serenade', 'serene', 'serf',
+  'serrate', 'sesame', 'settee', 'sewage', 'shale', 'shamble', 'shanty', 'shard',
+  'shawl', 'sheath', 'shingle', 'shipwright', 'shoal', 'shrapnel', 'shredder',
+  'shrewd', 'shrubbery', 'shuffle', 'shutter', 'sibling', 'sienna', 'silage',
+  'silhouette', 'simper', 'sinecure', 'singe', 'sitcom', 'sizzle', 'skiff',
+  'skillet', 'skydive', 'skylark', 'slalom', 'sledge', 'sleight', 'sliver', 'sloth',
+  'slouch', 'slovenly', 'slugger', 'smelt', 'smitten', 'smock', 'snuggle',
+  'sociable', 'sonnet', 'sorbet', 'soulful', 'southerly', 'spaniel', 'sparse',
+  'spatula', 'spigot', 'spinach', 'spindrift', 'spinnaker', 'splendid', 'splinter',
+  'splurge', 'spoiler', 'spool', 'sporran', 'spotlight', 'spume', 'squeamish',
+  'staccato', 'stalactite', 'stallion', 'stanza', 'staple', 'starch', 'stasis',
+  'staunch', 'steeple', 'stellar', 'stenosis', 'stipple', 'stoic', 'strudel',
+  'stucco', 'studious', 'sturdy', 'subway', 'succour', 'sudden', 'suffer', 'sultana',
+  'sunspot', 'surfeit', 'surly', 'suspect', 'swaddle', 'swanky', 'swarthy',
+  'swashbuckler', 'swelter', 'sycamore', 'synthesis', 'syrup', 'tabloid',
+  'taciturn', 'tadpole', 'taffeta', 'talisman', 'tambourine', 'tanker', 'tanner',
+  'tantalize', 'tapir', 'tarragon', 'tartar', 'tassel', 'tattered', 'taunt', 'tavern',
+  'teakettle', 'teaspoon', 'tectonic', 'temerity', 'tempera', 'temperate', 'temple',
+  'tenderloin', 'tenement', 'tenor', 'tension', 'tentacle', 'tepid', 'terminal',
+  'terrace', 'terrarium', 'tessellate', 'testify', 'texture', 'thatch', 'thaw',
+  'theatre', 'theology', 'thermal', 'thicket', 'thimble', 'thistle', 'thorax',
+  'threshold', 'throttle', 'thrush', 'thunder', 'thwart', 'tibia', 'timbre', 'tinder',
+  'tinsel', 'tiptoe', 'tirade', 'tissue', 'titanic', 'toboggan', 'tolerance',
+  'tomato', 'tomboy', 'topaz', 'topical', 'topple', 'torrent', 'tortoise', 'totem',
+  'toucan', 'towel', 'trapeze', 'trestle', 'tribute', 'triceps', 'trifle', 'trilogy',
+  'trinket', 'triumphal', 'trivial', 'trolley', 'trombone', 'trophy', 'trowel',
+  'truant', 'truffle', 'trumpet', 'tufted', 'tumble', 'tundra', 'tunnel', 'turban',
+  'turbine', 'turmoil', 'turnip', 'turquoise', 'turret', 'turtle', 'tussle',
+  'twilight', 'typhoon', 'udder', 'ulcer', 'umbrella', 'uncanny', 'underdog',
+  'undulate', 'unfurl', 'unicorn', 'unify', 'unison', 'unravel', 'unwind', 'upbeat',
+  'upend', 'upholstery', 'upright', 'upriver', 'uproar', 'uptake', 'urbanize',
+  'urchin', 'urgency', 'usable', 'vacancy', 'vagary', 'valiant', 'valour', 'vandal',
+  'variegate', 'vaudeville', 'veneer', 'venerable', 'venison', 'veracity', 'verdant',
+  'verdigris', 'veritable', 'vertigo', 'vestibule', 'vestige', 'vexation', 'viaduct',
+  'vibrant', 'vicarious', 'viceroy', 'vicinity', 'victor', 'vigil', 'vigorous',
+  'village', 'villain', 'vinaigrette', 'vinegar', 'vintage', 'vintner', 'violet',
+  'viper', 'virtue', 'viscount', 'visor', 'vocalist', 'vocation', 'volcano',
+  'voltage', 'voluminous', 'voyage', 'waffle', 'waggish', 'wainscot', 'waistband',
+  'wallow', 'wampum', 'wanderlust', 'waning', 'wanton', 'wardrobe', 'warehouse',
+  'wariness', 'warpath', 'warrantee', 'wary', 'washerwoman', 'watchful',
+  'waterlogged', 'wattle', 'waziri', 'weakling', 'weasel', 'weathered', 'webbing',
+  'wednesday', 'waxy', 'weedy', 'weevil', 'welder', 'werewolf', 'westerly', 'wetland',
+  'whalebone', 'whence', 'wherewithal', 'whetstone', 'whiff', 'whimsical', 'whinny',
+  'whipping', 'whirlpool', 'whisker', 'whisper', 'whistle', 'whitewash', 'whorl',
+  'wicker', 'wicket', 'widen', 'widget', 'wield', 'wight', 'wiggle', 'wilder',
+  'wily', 'wince', 'winch', 'windfall', 'windmill', 'wisp', 'wisdom', 'wisteria',
+  'wistful', 'wombat', 'wonderland', 'wooden', 'woolly', 'workbench', 'worried',
+  'worrying', 'wrangle', 'wrangler', 'wreath', 'wreckage', 'wrestle', 'wring',
+  'wrinkle', 'xylophone', 'yardstick', 'yearling', 'yonder', 'zealous', 'zenith',
+  'zeppelin', 'zigzag', 'zinnia', 'zipper', 'zircon', 'zodiac', 'zucchini',
 ];
 
-// Dedupe — the answer list is a subset of the allowed list by design.
+// Dedupe. The answer list is a deliberate subset of the allowed list.
 export const ALLOWED = new Set([...ANSWERS, ...EXTRA]);
 </script>
 
 <!-- ================= zip builder (payload-safe) ================= -->
 <script>
 (function () {
-  // Payloads live in <script type="file/plain"> blocks and are read as
+  // Payloads live in <script type="file/plain"> blocks and are read with
   // textContent, so backticks and ${...} in the source can never terminate
-  // anything. The only sequence that would end a block early is </script,
-  // which is why index.html stores its tag as <\/script and we unescape here.
+  // anything. The one sequence that WOULD end a block early is a literal
+  // closing script tag, so the only payload that needs one (index.html) stores
+  // the placeholder [[/script]] and we substitute it back at read time.
+  var CLOSE = '<' + '/script>';
+
   var files = [].slice.call(document.querySelectorAll('script[type="file/plain"]')).map(function (s) {
     return {
       name: s.getAttribute('data-name'),
       text: s.textContent.replace(/^\n/, '').replace(/\s+$/, '') + '\n'
-                 .split('<\\/script>').join('</script>')
+        .split('[[/script]]').join(CLOSE)
     };
   });
   document.getElementById('fcount').textContent = String(files.length);
@@ -1390,12 +1419,11 @@ export const ALLOWED = new Set([...ANSWERS, ...EXTRA]);
     return out;
   }
 
-  var btn = document.getElementById('dl');
   var note = document.getElementById('status2');
 
-  btn.addEventListener('click', function () {
+  document.getElementById('dl').addEventListener('click', function () {
     try {
-      note.textContent = 'Building ' + files.length + ' files…';
+      note.textContent = 'Building ' + files.length + ' files...';
       var bytes = buildZip(files);
       var blob = new Blob([bytes], { type: 'application/zip' });
       var url = URL.createObjectURL(blob);
@@ -1406,7 +1434,7 @@ export const ALLOWED = new Set([...ANSWERS, ...EXTRA]);
       a.click();
       document.body.removeChild(a);
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-      note.textContent = 'Downloaded — ' + (bytes.length / 1024).toFixed(1) + ' KB, ' + files.length + ' files.';
+      note.textContent = 'Downloaded, ' + (bytes.length / 1024).toFixed(1) + ' KB, ' + files.length + ' files.';
     } catch (err) {
       note.textContent = 'Failed: ' + (err && err.message ? err.message : String(err));
     }

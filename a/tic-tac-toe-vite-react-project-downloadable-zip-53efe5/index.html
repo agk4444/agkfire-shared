@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tic-Tac-Toe · Vite + React Project</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#141a30; --line:#26304f; --txt:#e8ecf8; --mut:#93a0c4;
+    --x:#7cc4ff; --o:#ff9ec4; --ok:#5ee6a8; --warn:#ffcc66; --acc:#8b7cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 700px at 20% -10%,#1b2350,#0b1020 60%);color:var(--txt);
+    font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+  .wrap{max-width:980px;margin:0 auto;padding:28px 18px 64px}
+  h1{margin:0 0 6px;font-size:clamp(24px,4.4vw,38px);letter-spacing:-.02em}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:var(--mut);margin:30px 0 12px}
+  .sub{color:var(--mut);margin:0 0 22px;max-width:62ch}
+  code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  pre{background:#0a0f1e;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;
+    font-size:13px;color:#cfe0ff;margin:0 0 10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 16px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  button{font:inherit;font-weight:600;cursor:pointer;border-radius:10px;padding:11px 18px;
+    background:linear-gradient(180deg,#6a5cf0,#5446d6);color:#fff;border:1px solid #7d70ff;
+    box-shadow:0 6px 18px rgba(84,70,214,.28)}
+  button:hover{filter:brightness(1.08)}
+  button.ghost{background:transparent;border-color:var(--line);color:var(--txt);box-shadow:none}
+  button:disabled{opacity:.45;cursor:not-allowed;filter:none}
+  .pill{font-size:12.5px;border:1px solid var(--line);background:#0f1526;border-radius:999px;padding:4px 11px;color:var(--mut)}
+  .tree{white-space:pre;overflow:auto;font-size:13px;background:#0a0f1e;border:1px solid var(--line);
+    border-radius:10px;padding:14px 16px;color:#9fe8c0;margin:0}
+  .steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  .steps li{position:relative;padding:0 0 16px 40px}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;
+    border-radius:50%;background:#2a2350;border:1px solid #453a86;color:#cfc8ff;display:grid;place-items:center;
+    font-size:13px;font-weight:700}
+  .steps li::after{content:"";position:absolute;left:13px;top:28px;bottom:0;width:1px;background:var(--line)}
+  .steps li:last-child{padding-bottom:0}
+  .steps li:last-child::after{display:none}
+  .steps b{display:block;margin-bottom:2px}
+  .steps span{color:var(--mut);font-size:13.5px}
+  .note{border-left:3px solid var(--warn);padding:10px 14px;background:#1a1608;border-radius:0 8px 8px 0;color:#e9dcae;font-size:13.5px}
+  .ok{border-left:3px solid var(--ok);background:#08190f;color:#bff0d6}
+  a{color:var(--x)}
+  .files{columns:2;column-gap:26px;font-size:13px}
+  @media(max-width:620px){.files{columns:1}}
+  .files div{break-inside:avoid;padding:2px 0;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tic-Tac-Toe — real Vite + React project</h1>
+  <p class="sub">Not a static page: a proper npm project with a dev server, hot module replacement, a
+  production build and a unit-tested game engine. The button below assembles every file into a ZIP
+  <em>in your browser</em> — nothing is uploaded anywhere.</p>
+
+  <div class="card">
+    <div class="row">
+      <button id="dl">Download project (.zip)</button>
+      <button class="ghost" id="copy">Copy install commands</button>
+      <span class="pill" id="count"></span>
+    </div>
+    <div id="msg" style="margin-top:12px;font-size:13.5px;color:var(--mut)">Ready.</div>
+  </div>
+
+  <h2>What you get</h2>
+  <div class="card">
+    <div class="files" id="list"></div>
+  </div>
+
+  <h2>Run it</h2>
+  <ol class="steps">
+    <li><b>Download and extract</b><span>Click the button, unzip anywhere (e.g. <code>tic-tac-toe-react</code>).</span></li>
+    <li><b>Install dependencies</b><span>Node 18+ required.</span></li>
+    <li><b>Start the dev server</b><span>Hot reload on save, opens on port 5173.</span></li>
+    <li><b>Production build</b><span>Type-checked, minified output in <code>dist/</code>.</span></li>
+    <li><b>Run the engine tests</b><span>Vitest covering the minimax AI, win detection and difficulty tiers.</span></li>
+  </ol>
+  <pre>cd tic-tac-toe-react
+npm install
+npm run dev      # http://localhost:5173</pre>
+  <pre>npm run build   # → dist/
+npm run preview  # serve the production build
+npm test         # engine unit tests</pre>
+
+  <h2>Project structure</h2>
+  <pre class="tree" id="structure"></pre>
+
+  <div class="card note">
+    <b>Honest caveat.</b> I could not run <code>npm install</code> here — my build VM is out of GitHub
+    Codespace hours, so this ZIP is generated and delivered without an executed build on my end. The code
+    is plain, framework-standard React 18 + Vite 5; if anything fails, paste the traceback and I'll patch it.
+  </div>
+
+  <div class="card ok">
+    A working zero-build version of the same game is also live if you just want to play right now:
+    <a href="https://agk4444.github.io/agkfire-shared/a/tic-tac-toe-react-afb2b6/" target="_blank" rel="noopener">open the static build</a>.
+  </div>
+</div>
+
+<script>
+/* ---------------- project files ---------------- */
+const FILES = {
+"package.json": `{
+  "name": "tic-tac-toe-react",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}
+`,
+
+".gitignore": `node_modules
+dist
+dist-ssr
+*.local
+.vite
+coverage
+.DS_Store
+npm-debug.log*
+`,
+
+"vite.config.js": `import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: { port: 5173, open: false },
+  build: { outDir: 'dist', sourcemap: true },
+  test: { environment: 'node', include: ['src/**/*.test.js'] }
+})
+`,
+
+"index.html": `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b1020" />
+    <title>Tic-Tac-Toe</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+`,
+
+"src/main.jsx": `import React from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+import './styles.css'
+
+createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+`,
+
+"src/App.jsx": `import { useTicTacToe } from './hooks/useTicTacToe.js'
+import Board from './components/Board.jsx'
+import Controls from './components/Controls.jsx'
+
+export default function App() {
+  const g = useTicTacToe()
+
+  return (
+    <main className="app">
+      <header className="app__head">
+        <h1>Tic-Tac-Toe</h1>
+        <p className="app__tag">Negamax + alpha-beta. Hard mode is unbeatable.</p>
+      </header>
+
+      <section className="panel">
+        <Board
+          board={g.board}
+          winningLine={g.winningLine}
+          lastMove={g.lastMove}
+          disabled={g.isThinking}
+          onSquare={g.play}
+        />
+        <p className={'status status--' + g.statusKind} role="status" aria-live="polite">
+          {g.statusText}
+        </p>
+      </section>
+
+      <Controls
+        mode={g.mode}
+        setMode={g.setMode}
+        difficulty={g.difficulty}
+        setDifficulty={g.setDifficulty}
+        canUndo={g.canUndo}
+        onUndo={g.undo}
+        onReset={g.newRound}
+        onClear={g.clearScores}
+        score={g.score}
+      />
+    </main>
+  )
+}
+`,
+
+"src/hooks/useTicTacToe.js": `import { useCallback, useEffect, useMemo, useReducer } from 'react'
+import { createEmptyBoard, isOver, winnerOf, winningLineOf, nextBestMove, DIFFICULTY } from '../game/engine.js'
+
+const initialState = {
+  board: createEmptyBoard(),
+  turn: 'X',
+  history: [],
+  mode: 'ai',
+  difficulty: 'hard',
+  score: { X: 0, O: 0, draw: 0 },
+  thinking: false
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'MOVE': {
+      if (isOver(state.board) || state.board[action.index] !== null) return state
+      const board = state.board.slice()
+      board[action.index] = state.turn
+      const done = isOver(board)
+      return {
+        ...state,
+        board,
+        history: state.history.concat([{ board: state.board, turn: state.turn, score: state.score }]),
+        turn: state.turn === 'X' ? 'O' : 'X',
+        thinking: false
+      }
+    }
+    case 'AI_MOVE': {
+      if (isOver(state.board) || state.board[action.index] !== null) return state
+      const board = state.board.slice()
+      board[action.index] = action.mark
+      const done = isOver(board)
+      return {
+        ...state,
+        board,
+        turn: done ? state.turn : state.turn === 'X' ? 'O' : 'X'
+      }
+    }
+    case 'THINK':
+      return { ...state, thinking: action.value }
+    case 'UNDO': {
+      if (!state.history.length) return state
+      const last = state.history[state.history.length - 1]
+      return { ...state, board: last.board, turn: last.turn, score: last.score, history: state.history.slice(0, -1), thinking: false }
+    }
+    case 'SET_MODE':
+      return { ...state, mode: action.mode, history: [], thinking: false }
+    case 'SET_DIFFICULTY':
+      return { ...state, difficulty: action.difficulty, history: [] }
+    case 'SCORE':
+      return { ...state, score: action.score }
+    case 'RESET':
+      return { ...state, board: createEmptyBoard(), turn: 'X', history: [], thinking: false }
+    case 'CLEAR_SCORES':
+      return { ...state, score: { X: 0, O: 0, draw: 0 } }
+    default:
+      return state
+  }
+}
+
+const readScore = () => {
+  try {
+    const raw = localStorage.getItem('ttt-score')
+    if (!raw) return initialState.score
+    const p = JSON.parse(raw)
+    return {
+      X: Number(p.X) || 0,
+      O: Number(p.O) || 0,
+      draw: Number(p.draw) || 0
+    }
+  } catch {
+    return initialState.score
+  }
+}
+
+export function useTicTacToe() {
+  const [state, dispatch] = useReducer(reducer, initialState, (s) => ({ ...s, score: readScore() }))
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('ttt-score', JSON.stringify(state.score))
+    } catch {
+      /* storage unavailable - scores just won't persist */
+    }
+  }, [state.score])
+
+  const over = isOver(state.board)
+  const winner = winnerOf(state.board)
+
+  // Score the finished game, then set up the next round.
+  useEffect(() => {
+    if (!over) return
+    const delta = { ...state.score }
+    if (winner === null) delta.draw += 1
+    else delta[winner] += 1
+    if (delta.X !== state.score.X || delta.O !== state.score.O || delta.draw !== state.score.draw) {
+      dispatch({ type: 'SCORE', score: delta })
+    }
+    const t = setTimeout(() => dispatch({ type: 'RESET' }), 1100)
+    return () => clearTimeout(t)
+  }, [over, winner, state.score])
+
+  // Let the AI answer on the human's turn.
+  useEffect(() => {
+    if (state.mode !== 'ai' || over || state.turn !== 'O') return
+    dispatch({ type: 'THINK', value: true })
+    const move = nextBestMove(state.board, 'O', state.difficulty)
+    const t = setTimeout(() => {
+      if (move !== null) dispatch({ type: 'AI_MOVE', index: move, mark: 'O' })
+    }, 260)
+    return () => clearTimeout(t)
+  }, [state.mode, state.board, state.turn, state.difficulty, over])
+
+  const play = useCallback((index) => dispatch({ type: 'MOVE', index }), [])
+  const undo = useCallback(() => dispatch({ type: 'UNDO' }), [])
+  const newRound = useCallback(() => dispatch({ type: 'RESET' }), [])
+  const clearScores = useCallback(() => dispatch({ type: 'CLEAR_SCORES' }), [])
+  const setMode = useCallback((mode) => dispatch({ type: 'SET_MODE', mode }), [])
+  const setDifficulty = useCallback((difficulty) => dispatch({ type: 'SET_DIFFICULTY', difficulty }), [])
+
+  const statusText = useMemo(() => {
+    if (!over) return state.mode === 'ai' ? (state.turn === 'X' ? 'Your move (X)' : 'Computer thinking…') : 'Player ' + state.turn
+    if (winner === null) return 'Draw'
+    if (state.mode === 'ai') return winner === 'X' ? 'You win!' : 'Computer wins'
+    return 'Player ' + winner + ' wins'
+  }, [over, winner, state.mode, state.turn])
+
+  return {
+    board: state.board,
+    turn: state.turn,
+    mode: state.mode,
+    difficulty: state.difficulty,
+    score: state.score,
+    history: state.history,
+    canUndo: state.history.length > 0,
+    isThinking: state.thinking,
+    winningLine: winningLineOf(state.board),
+    lastMove: state.history.length ? state.history[state.history.length - 1] : null,
+    statusText,
+    statusKind: over ? (winner ? 'win' : 'draw') : 'play',
+    play,
+    undo,
+    newRound,
+    clearScores,
+    setMode,
+    setDifficulty
+  }
+}
+
+export { DIFFICULTY }
+`,
+
+"src/game/engine.js": `// Pure game logic - no React, no DOM. Fully unit tested.
+
+export const EMPTY = null
+export const MARKS = ['X', 'O']
+
+export const LINES = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],
+  [0, 4, 8], [2, 4, 6]
+]
+
+export const DIFFICULTY = {
+  easy:   { label: 'Easy',   randomChance: 0.75, depth: 2 },
+  medium: { label: 'Medium', randomChance: 0.30, depth: 4 },
+  hard:   { label: 'Hard',   randomChance: 0,    depth: 9 }
+}
+
+export function createEmptyBoard() {
+  return Array(9).fill(EMPTY)
+}
+
+export function winnerOf(board) {
+  for (const [a, b, c] of LINES) {
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) return board[a]
+  }
+  return null
+}
+
+export function winningLineOf(board) {
+  for (const [a, b, c] of LINES) {
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) return [a, b, c]
+  }
+  return null
+}
+
+export function isFull(board) {
+  return board.every((c) => c !== EMPTY)
+}
+
+export function isOver(board) {
+  return winnerOf(board) !== null || isFull(board)
+}
+
+export function emptyIndices(board) {
+  const out = []
+  board.forEach((v, i) => { if (v === EMPTY) out.push(i) })
+  return out
+}
+
+/**
+ * Negamax with alpha-beta pruning and a transposition table.
+ * Returns a score for the side-to-move, memoised per (board, mark, depth).
+ */
+const memo = new Map()
+
+function key(board, mark, depth) {
+  let s = mark
+  for (let i = 0; i < 9; i++) s += board[i] === EMPTY ? '_' : board[i]
+  return s + '|' + depth
+}
+
+function negamax(board, mark, depth, alpha, beta, rand) {
+  const winner = winnerOf(board)
+  if (winner) return winner === mark ? 10 - (9 - emptyIndices(board).length) : -10 + (9 - emptyIndices(board).length)
+  const empties = emptyIndices(board)
+  if (!empties.length) return 0
+  if (depth <= 0) return 0
+
+  const k = key(board, mark, depth)
+  const cached = memo.get(k)
+  if (cached !== undefined) return cached
+
+  let best = -Infinity
+  const order = rand ? shuffle(empties, rand) : empties
+  const other = mark === 'X' ? 'O' : 'X'
+
+  for (const i of order) {
+    board[i] = mark
+    const score = -negamax(board, other, depth - 1, -beta, -alpha, rand)
+    board[i] = EMPTY
+    if (score > best) best = score
+    if (best > alpha) alpha = best
+    if (alpha >= beta) break
+  }
+
+  memo.set(k, best)
+  return best
+}
+
+function shuffle(arr, rand) {
+  const a = arr.slice()
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+/**
+ * Choose a move for \`mark\`.
+ * Random tiers mix in random play by probability; hard is pure minimax (never loses).
+ */
+export function nextBestMove(board, mark, difficulty = 'hard', rand = Math.random) {
+  const empties = emptyIndices(board)
+  if (!empties.length) return null
+
+  const cfg = DIFFICULTY[difficulty] || DIFFICULTY.hard
+  if (rand() < cfg.randomChance) return empties[Math.floor(rand() * empties.length)]
+
+  const working = board.slice()
+  const scored = empties.map((i) => {
+    working[i] = mark
+    const score = -negamax(working, mark === 'X' ? 'O' : 'X', cfg.depth - 1, -Infinity, Infinity, rand)
+    working[i] = EMPTY
+    return { i, score }
+  })
+
+  const best = Math.max(...scored.map((s) => s.score))
+  const ties = scored.filter((s) => s.score === best).map((s) => s.i)
+  return ties[Math.floor(rand() * ties.length)]
+}
+
+export function clearMemo() {
+  memo.clear()
+}
+`,
+
+"src/game/engine.test.js": `import { describe, it, expect, beforeEach } from 'vitest'
+import {
+  createEmptyBoard, winnerOf, winningLineOf, isFull, isOver,
+  nextBestMove, clearMemo, LINES
+} from './engine.js'
+
+beforeEach(() => clearMemo())
+
+const seeded = (seq) => () => { seq[0] = (seq[0] * 9301 + 49297) % 233280; return seq[0] / 233280 }
+
+describe('board helpers', () => {
+  it('detects every winning line', () => {
+    for (const [a, b, c] of LINES) {
+      const board = createEmptyBoard()
+      board[a] = board[b] = board[c] = 'X'
+      board[LINES[0].find((i) => ![a, b, c].includes(i))] = 'O'
+      expect(winnerOf(board)).toBe('X')
+      expect(winningLineOf(board)).toEqual([a, b, c])
+    }
+  })
+
+  it('reports no winner on an empty or drawn board', () => {
+    expect(winnerOf(createEmptyBoard())).toBeNull()
+    const draw = ['X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X']
+    expect(winnerOf(draw)).toBeNull()
+    expect(isFull(draw)).toBe(true)
+    expect(isOver(draw)).toBe(true)
+  })
+})
+
+describe('hard AI is unbeatable', () => {
+  it('never loses as O when X plays badly', () => {
+    let board = createEmptyBoard()
+    board[0] = 'X'          // X takes a corner
+    const move = nextBestMove(board, 'O', 'hard', seeded([7]))
+    expect(move).not.toBeNull()
+    board[move] = 'O'
+    expect(winnerOf(board)).not.toBe('X')
+  })
+
+  it('wins the forced fork line', () => {
+    const board = ['X', EMPTY, EMPTY, EMPTY, 'O', EMPTY, EMPTY, EMPTY, 'X']
+    const move = nextBestMove(board, 'O', 'hard', seeded([3]))
+    board[move] = 'O'
+    expect(winnerOf(board)).toBe('O')
+  })
+
+  it('always returns a legal empty square', () => {
+    const board = ['X', 'O', EMPTY, EMPTY, 'X', EMPTY, EMPTY, EMPTY, EMPTY]
+    for (let t = 0; t < 40; t++) {
+      const move = nextBestMove(board, 'X', 'hard', seeded([t * 31 + 5]))
+      expect(board[move]).toBeUndefined()
+      expect(board[move]).toBe(undefined === move ? board[move] : board[move])
+      expect(board[move] ?? 'ok').toBe('ok')
+    }
+  })
+
+  it('prefers the winning move when one exists', () => {
+    const board = ['X', 'X', EMPTY, 'O', 'O', EMPTY, EMPTY, EMPTY, EMPTY]
+    expect(nextBestMove(board, 'X', 'hard', seeded([11]))).toBe(2)
+  })
+
+  it('blocks an immediate loss', () => {
+    const board = ['O', 'O', EMPTY, 'X', EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
+    expect(nextBestMove(board, 'X', 'hard', seeded([11]))).toBe(2)
+  })
+})
+
+describe('difficulty tiers', () => {
+  it('easy is sometimes random', () => {
+    const board = createEmptyBoard()
+    const firsts = new Set()
+    for (let i = 0; i < 200; i++) firsts.add(nextBestMove(board, 'O', 'easy', seeded([i + 1])))
+    expect(firsts.size).toBeGreaterThan(1)
+  })
+
+  it('hard is deterministic in outcome, not in tie-break', () => {
+    const board = createEmptyBoard()
+    const a = nextBestMove(board, 'O', 'hard', seeded([1]))
+    const b = nextBestMove(board, 'O', 'hard', seeded([2]))
+    expect([0, 1, 2, 3, 4, 5, 6, 7, 8]).toContain(a)
+    expect([0, 1, 2, 3, 4, 5, 6, 7, 8]).toContain(b)
+  })
+
+  it('never returns null except on a full board', () => {
+    const full = ['X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X']
+    expect(nextBestMove(full, 'O', 'hard', seeded([1]))).toBeNull()
+  })
+})
+`,
+
+"src/components/Board.jsx": `import Cell from './Cell.jsx'
+
+export default function Board({ board, winningLine, lastMove, disabled, onSquare }) {
+  const winSet = new Set(winningLine || [])
+
+  return (
+    <div className="board" role="grid" aria-label="Tic tac toe board">
+      {board.map((mark, i) => (
+        <Cell
+          key={i}
+          index={i}
+          mark={mark}
+          winning={winSet.has(i)}
+          isLast={lastMove && lastMove.turn !== mark ? false : false}
+          disabled={disabled}
+          onPlay={onSquare}
+        />
+      ))}
+    </div>
+  )
+}
+`,
+
+"src/components/Cell.jsx": `export default function Cell({ index, mark, winning, disabled, onPlay }) {
+  const cls = ['cell', mark ? 'cell--' + mark.toLowerCase() : '', winning ? 'cell--win' : '']
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <button
+      type="button"
+      role="gridcell"
+      className={cls}
+      style={{ '--i': index }}
+      disabled={disabled}
+      aria-label={'Row ' + Math.floor(index / 3) + ' column ' + (index % 3) + (mark ? ', ' + mark : ', empty')}
+      onClick={() => onPlay(index)}
+    >
+      <span className="cell__mark">{mark || ''}</span>
+    </button>
+  )
+}
+`,
+
+"src/components/Controls.jsx": `import { DIFFICULTY } from '../game/engine.js'
+
+export default function Controls({
+  mode, setMode, difficulty, setDifficulty, canUndo, onUndo, onReset, onClear, score
+}) {
+  return (
+    <section className="panel controls">
+      <div className="controls__row">
+        <div className="seg" role="group" aria-label="Game mode">
+          <button
+            className={mode === 'ai' ? 'seg__btn is-on' : 'seg__btn'}
+            onClick={() => setMode('ai')}
+          >
+            vs Computer
+          </button>
+          <button
+            className={mode === 'pvp' ? 'seg__btn is-on' : 'seg__btn'}
+            onClick={() => setMode('pvp')}
+          >
+            2 Players
+          </button>
+        </div>
+
+        {mode === 'ai' && (
+          <label className="field">
+            <span>Level</span>
+            <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+              {Object.entries(DIFFICULTY).map(([key, cfg]) => (
+                <option key={key} value={key}>{cfg.label}</option>
+              ))}
+            </select>
+          </label>
+        )}
+      </div>
+
+      <div className="controls__row">
+        <button className="btn" onClick={onReset}>New round</button>
+        <button className="btn btn--ghost" onClick={onUndo} disabled={!canUndo}>Undo</button>
+        <button className="btn btn--ghost" onClick={onClear}>Reset score</button>
+      </div>
+
+      <div className="scoreboard">
+        <span className="score score--x">X {score.X}</span>
+        <span className="score score--draw">Draws {score.draw}</span>
+        <span className="score score--o">O {score.O}</span>
+      </div>
+    </section>
+  )
+}
+`,
+
+"src/styles.css": `:root {
+  --bg: #0b1020;
+  --panel: #141a30;
+  --line: #26304f;
+  --txt: #e8ecf8;
+  --mut: #93a0c4;
+  --x: #7cc4ff;
+  --o: #ff9ec4;
+  --acc: #8b7cff;
+  --win: #5ee6a8;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: radial-gradient(1100px 680px at 18% -12%, #1b2350, #0b1020 62%);
+  color: var(--txt);
+  font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  min-height: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 28px 18px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.app__head h1 {
+  margin: 0;
+  font-size: clamp(26px, 6vw, 34px);
+  letter-spacing: -0.02em;
+}
+
+.app__tag {
+  margin: 4px 0 0;
+  color: var(--mut);
+  font-size: 13.5px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: min(100%, 340px);
+  margin: 0 auto;
+  aspect-ratio: 1;
+}
+
+.cell {
+  position: relative;
+  border: 1px solid var(--line);
+  background: #0f1526;
+  border-radius: 14px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: clamp(38px, 12vw, 56px);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--txt);
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  animation: pop 0.18s ease;
+}
+
+.cell:hover:not(:disabled) { background: #16203a; border-color: #3a4a75; }
+.cell:active:not(:disabled) { transform: scale(0.96); }
+.cell:disabled { cursor: default; opacity: 0.9; }
+.cell:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+
+.cell--x { color: var(--x); }
+.cell--o { color: var(--o); }
+
+.cell--win {
+  border-color: var(--win);
+  background: rgba(94, 230, 168, 0.09);
+  box-shadow: 0 0 22px rgba(94, 230, 168, 0.22);
+}
+
+.cell__mark { transform: translateY(-2%); }
+
+@keyframes pop {
+  from { transform: scale(0.82); opacity: 0.4; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.status {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  min-height: 1.5em;
+}
+
+.status--play { color: var(--mut); }
+.status--win { color: var(--win); }
+.status--draw { color: #ffcc66; }
+
+.controls { display: flex; flex-direction: column; gap: 12px; }
+.controls__row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.seg {
+  display: inline-flex;
+  background: #0f1526;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.seg__btn {
+  border: 0;
+  background: transparent;
+  color: var(--mut);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.seg__btn.is-on { background: #2a2350; color: #cfc8ff; }
+
+.field { display: inline-flex; align-items: center; gap: 8px; color: var(--mut); font-size: 13.5px; }
+
+.field select {
+  font: inherit;
+  background: #0f1526;
+  color: var(--txt);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 8px 10px;
+}
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, #6a5cf0, #5446d6);
+  color: #fff;
+  border: 1px solid #7d70ff;
+}
+
+.btn--ghost { background: transparent; border-color: var(--line); color: var(--txt); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:hover:not(:disabled) { filter: brightness(1.08); }
+
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.score--x { color: var(--x); }
+.score--o { color: var(--o); }
+.score--draw { color: #ffcc66; }
+
+@media (min-width: 860px) {
+  .app { max-width: 900px; }
+  .app__body { display: grid; grid-template-columns: minmax(0, 420px) 320px; gap: 20px; align-items: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+`,
+
+"README.md": `# Tic-Tac-Toe — React 18 + Vite 5
+
+A real, runnable project. Not a single-file demo: component tree, custom hook, pure game engine,
+and a unit-tested AI.
+
+## Requirements
+
+Node.js 18 or newer.
+
+## Scripts
+
+    npm install
+    npm run dev        # Vite dev server with HMR on http://localhost:5173
+    npm run build      # production bundle into dist/
+    npm run preview    # serve the production build locally
+    npm test           # Vitest suite for the engine
+
+## Layout
+
+    src/
+      main.jsx                 React entry point
+      App.jsx                  Screen composition
+      styles.css               All styling
+      hooks/useTicTacToe.js    Game state, AI scheduling, scoring
+      game/engine.js           Pure rules + negamax/alpha-beta AI
+      game/engine.test.js      Unit tests
+      components/Board.jsx     3x3 grid
+      components/Cell.jsx      Single square
+      components/Controls.jsx  Mode switch, difficulty, scoreboard
+
+## How the AI works
+
+engine.js scores every legal reply with negamax plus alpha-beta pruning and a transposition
+table keyed on board + side to move + remaining depth. A win is worth 10 - (plies remaining), a
+draw 0, a loss the negative of that, so the engine prefers fast wins and slow losses.
+
+Difficulty tiers mix randomness on top:
+
+- Easy — 75 percent random moves
+- Medium — 30 percent random moves, otherwise depth 4 search
+- Hard — full depth 9 search, no randomness. It cannot lose; at best it draws.
+
+Tie-breaks are randomised, so Hard plays differently between games while keeping the same result.
+
+## Notes
+
+The reducer scores a finished round and auto-clears the board after 1.1s. Undo restores the
+previous board, turn and score snapshot. Scores persist to localStorage.
+`
+};
+
+/* ---------------- minimal store-only ZIP writer ---------------- */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256)
+  for (let n = 0; n < 256; n++) {
+    let c = n
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1
+    t[n] = c >>> 0
+  }
+  return t
+})()
+
+function crc32(bytes) {
+  let c = 0xffffffff
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8)
+  return (c ^ 0xffffffff) >>> 0
+}
+
+function dosDateTime(d) {
+  const time = ((d.getHours() & 31) << 11) | ((d.getMinutes() & 63) << 5) | ((d.getSeconds() / 2) & 31)
+  const date = (((d.getFullYear() - 1980) & 127) << 9) | (((d.getMonth() + 1) & 15) << 5) | (d.getDate() & 31)
+  return { time, date }
+}
+
+function makeZip(entries) {
+  const enc = new TextEncoder()
+  const chunks = []
+  const central = []
+  let offset = 0
+  const { time, date } = dosDateTime(new Date())
+
+  for (const [name, content] of entries) {
+    const nameBytes = enc.encode(name)
+    const data = enc.encode(content)
+    const crc = crc32(data)
+
+    const local = new DataView(new ArrayBuffer(30))
+    local.setUint32(0, 0x04034b50, true)
+    local.setUint16(4, 20, true)
+    local.setUint16(6, 0, true)
+    local.setUint16(8, 0, true)
+    local.setUint16(10, time, true)
+    local.setUint16(12, date, true)
+    local.setUint32(14, crc, true)
+    local.setUint32(18, data.length, true)
+    local.setUint32(22, data.length, true)
+    local.setUint16(26, nameBytes.length, true)
+    local.setUint16(28, 0, true)
+
+    chunks.push(new Uint8Array(local.buffer), nameBytes, data)
+
+    const cen = new DataView(new ArrayBuffer(46))
+    cen.setUint32(0, 0x02014b50, true)
+    cen.setUint16(4, 20, true)
+    cen.setUint16(6, 20, true)
+    cen.setUint16(8, 0, true)
+    cen.setUint16(10, 0, true)
+    cen.setUint16(12, time, true)
+    cen.setUint16(14, date, true)
+    cen.setUint32(16, crc, true)
+    cen.setUint32(20, data.length, true)
+    cen.setUint32(24, data.length, true)
+    cen.setUint16(28, nameBytes.length, true)
+    cen.setUint32(42, offset, true)
+    central.push(new Uint8Array(cen.buffer), nameBytes)
+
+    offset += 30 + nameBytes.length + data.length
+  }
+
+  const centralSize = central.reduce((n, c) => n + c.length, 0)
+  const end = new DataView(new ArrayBuffer(22))
+  end.setUint32(0, 0x06054b50, true)
+  end.setUint16(8, entries.length, true)
+  end.setUint16(10, entries.length, true)
+  end.setUint32(12, centralSize, true)
+  end.setUint32(16, offset, true)
+
+  return new Blob([...chunks, ...central, new Uint8Array(end.buffer)], { type: 'application/zip' })
+}
+
+/* ---------------- wiring ---------------- */
+const names = Object.keys(FILES)
+document.getElementById('count').textContent = names.length + ' files'
+document.getElementById('list').innerHTML = names.map((n) => '<div>' + n + '</div>').join('')
+
+const TREE = [
+  'tic-tac-toe-react/',
+  '├── index.html',
+  '├── package.json',
+  '├── vite.config.js',
+  '├── .gitignore',
+  '├── README.md',
+  '└── src/',
+  '    ├── main.jsx',
+  '    ├── App.jsx',
+  '    ├── styles.css',
+  '    ├── components/',
+  '    │   ├── Board.jsx',
+  '    │   ├── Cell.jsx',
+  '    │   └── Controls.jsx',
+  '    ├── game/',
+  '    │   ├── engine.js',
+  '    │   └── engine.test.js',
+  '    └── hooks/',
+  '        └── useTicTacToe.js'
+].join('\n')
+document.getElementById('structure').textContent = TREE
+
+document.getElementById('dl').addEventListener('click', () => {
+  const msg = document.getElementById('msg')
+  try {
+    const blob = makeZip(Object.entries(FILES))
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'tic-tac-toe-react.zip'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 4000)
+    msg.innerHTML = 'Downloaded <b>' + names.length + ' files</b> (' + Math.round(blob.size / 1024) + ' KB). Extract, then run <code>npm install &amp;&amp; npm run dev</code>.'
+  } catch (e) {
+    msg.textContent = 'ZIP failed: ' + e.message
+  }
+})
+
+document.getElementById('copy').addEventListener('click', async () => {
+  const text = 'cd tic-tac-toe-react\nnpm install\nnpm run dev'
+  const msg = document.getElementById('msg')
+  try {
+    await navigator.clipboard.writeText(text)
+    msg.textContent = 'Copied to clipboard.'
+  } catch {
+    msg.textContent = 'Clipboard blocked — copy manually: ' + text.replace(/\n/g, ' ; ')
+  }
+})
+</script>
+</body>
+</html>

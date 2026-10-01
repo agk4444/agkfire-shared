@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen3 Emotion Classifier — Kaggle Notebook</title>
+<style>
+  :root{--bg:#0b1020;--card:#151b33;--ink:#e8ecf8;--mut:#93a0c4;--acc:#7cc4ff;--ok:#5ee6a8;--warn:#ffcf6b;--line:#26304f}
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b1020,#111a35);color:var(--ink);
+       font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:28px 18px 60px}
+  .wrap{max-width:860px;margin:0 auto}
+  h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+  .sub{color:var(--mut);margin:0 0 26px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+  .dl{display:inline-block;background:var(--acc);color:#071026;font-weight:700;text-decoration:none;
+      padding:13px 22px;border-radius:10px;font-size:1.02rem}
+  .dl:hover{filter:brightness(1.08)}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em}
+  pre{background:#0d1densely;background:#0d142b;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto}
+  table{border-collapse:collapse;width:100%;font-size:.94rem}
+  td,th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .ok{color:var(--ok);font-weight:700}
+  .warn{color:var(--warn);font-weight:700}
+  ul{padding-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Qwen3 Emotion Classifier</h1>
+  <p class="sub">Kaggle notebook &middot; free-tier only &middot; Qwen/Qwen3-0.6B + LoRA + dair-ai/emotion</p>
+
+  <div class="card">
+    <a class="dl" href="qwen3-emotion.ipynb" download>Download qwen3-emotion.ipynb</a>
+    <p style="color:var(--mut);margin-bottom:0">Upload it to Kaggle as a new notebook, or open in Jupyter/Colab locally.</p>
+  </div>
+
+  <div class="card">
+    <h2>What it is</h2>
+    <table>
+      <tr><td>Base model</td><td><code>Qwen/Qwen3-0.6B</code> (Apache-2.0, 128K ctx)</td></tr>
+      <tr><td>Method</td><td><code>*ForSequenceClassification</code> + LoRA r=16</td></tr>
+      <tr><td>Dataset</td><td><code>dair-ai/emotion</code> &mdash; 16k/2k/2k, 6 classes, free</td></tr>
+      <tr><td>Output</td><td>saved adapter (~35MB) + merged fp16 model (~1.2GB)</td></tr>
+      <tr><td>Cost</td><td>~0.5&ndash;0.8 of your 30 GPU-hours/week</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Run order</h2>
+    <ol>
+      <li><strong>Cell 1</strong> hardware probe &mdash; always first</li>
+      <li><strong>Cell 2</strong> installs</li>
+      <li>Cells 3&ndash;13 straight through</li>
+      <li>Cell 5 prints <code>MAX_LEN</code> from a real length audit, not a guess</li>
+    </ol>
+    <p class="warn" style="margin-bottom:0">If <code>n_gpu</code> prints 1: set <code>BS = 4</code> and <code>ACCUM = 4</code> to hold effective batch at 16.</p>
+  </div>
+
+  <div class="card">
+    <h2>The bug that would have silently ruined the run</h2>
+    <p>Qwen-family sequence classifiers pool the <em>last non-pad token</em>. With <code>pad_token_id</code> unset it takes the last value in the row &mdash; on a dynamically-padded batch that is a <code>&lt;pad&gt;</code> position. Training completes, loss looks fine, accuracy is garbage.</p>
+    <p style="margin-bottom:0">Cell 7 sets <code>model.config.pad_token_id</code> and asserts it is not <code>None</code>. Don't delete that assertion.</p>
+  </div>
+
+  <div class="card">
+    <h2>Hardware notes</h2>
+    <ul>
+      <li><strong>T4</strong> (sm_75) &mdash; no bf16, uses fp16; 4-bit NF4 works</li>
+      <li><strong>P100</strong> (sm_60) &mdash; 4-bit <em>unsupported</em>, notebook auto-drops to fp32 + BS 4 (~3&times; slower)</li>
+      <li>Kaggle assigns the GPU; you cannot choose. Probe first.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

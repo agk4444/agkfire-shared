@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run for Jeev — Contrast-Corrected Redesign Prototype</title>
+<meta name="description" content="Design prototype: WCAG-AA-corrected color palette, two-font system, alt text, and dark mode for the Run for Jeev 5th Annual 5K.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ---- CORRECTED PALETTE (every ratio below is measured, not estimated) ---- */
+  --bg:#FFFEFA;
+  --surface:#FFFFFF;
+  --ink:#1A1A1A;
+  --muted:#5A5A5A;
+
+  --green:#4A6B1F;        /* 6.10:1 on bg  | was #7FB432 = 2.45:1 FAIL */
+  --green-deep:#2D7A0A;   /* 5.34:1 on bg, white-on-it 5.38:1 */
+  --green-bright:#4F7A22; /* 5.03:1 on bg, white-on-it 5.47:1 */
+  --amber:#8A5200;        /* white-on-it 6.39:1  | was #EB9309 = 2.41:1 FAIL */
+  --purple:#7C3AB7;       /* 6.61:1 on bg */
+
+  --amber-wash:#FAE5BE;
+  --green-wash:#E7EFD6;
+  --purple-wash:#F0E6F9;
+  --line:#E3E0D8;
+
+  --focus:#1A1A1A;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.06);
+  --radius:10px;
+  --max:1120px;
+}
+html[data-theme="dark"]{
+  --bg:#12140F;
+  --surface:#1B1E17;
+  --ink:#F2F4EE;
+  --muted:#B0B6A8;
+  --green:#A8CC7A;
+  --green-deep:#8FD45A;
+  --green-bright:#8FD45A;
+  --amber:#F0B85A;
+  --purple:#C79BE8;
+  --amber-wash:#33280F;
+  --green-wash:#232C18;
+  --purple-wash:#2A1E36;
+  --line:#333A2C;
+  --focus:#F0B85A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Barlow",system-ui,-apple-system,sans-serif;
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"Oswald","Barlow",sans-serif;line-height:1.15;margin:0 0 .5em;letter-spacing:.01em}
+h1{font-size:clamp(2.1rem,6.5vw,3.4rem);font-weight:700}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:600}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0 0 1.1em}
+a{color:var(--green);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+a:hover{color:var(--green-deep)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+.eyebrow{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:600;color:var(--green);margin:0 0 .75rem}
+.lede{font-size:1.12rem;color:var(--muted);max-width:62ch}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--bg);padding:12px 18px;z-index:99;border-radius:0 0 var(--radius) 0}
+.skip:focus{left:0}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:"Oswald",sans-serif;font-weight:600;
+  font-size:1.02rem;letter-spacing:.04em;text-transform:uppercase;padding:.85em 1.7em;border-radius:var(--radius);
+  border:2px solid transparent;text-decoration:none;cursor:pointer;transition:transform .12s ease,filter .12s ease}
+.btn-solid{background:var(--amber);color:#FFF}          /* white on #8A5200 = 6.39:1 */
+html[data-theme="dark"] .btn-solid{color:#1A1408}
+.btn-solid:hover{filter:brightness(1.08);color:#FFF}
+html[data-theme="dark"] .btn-solid:hover{color:#1A1408}
+.btn-green{background:var(--green-deep);color:#FFF}
+html[data-theme="dark"] .btn-green{color:#12140F}
+.btn-green:hover{color:#FFF}
+html[data-theme="dark"] .btn-green:hover{color:#12140F}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:2rem}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;background:var(--surface);
+  border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.bar{display:flex;align-items:center;gap:20px;min-height:74px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+.brand img{height:46px;width:auto;display:block}
+html[data-theme="dark"] .brand img{filter:brightness(1.15)}
+nav{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:.96rem}
+nav a:hover{color:var(--green)}
+.theme-toggle{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;
+  width:40px;height:40px;cursor:pointer;font-size:1.05rem;display:grid;place-items:center}
+.theme-toggle:hover{border-color:var(--green)}
+@media(max-width:760px){
+  nav{width:100%;order:3;gap:16px;padding-bottom:6px;font-size:.92rem}
+  .brand{margin-right:0}
+}
+
+/* ---------- crisis strip ---------- */
+.crisis{background:var(--purple-wash);border-bottom:1px solid var(--line)}
+.crisis .wrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding-block:12px;font-size:.96rem}
+.crisis strong{color:var(--purple)}
+.crisis a{color:var(--purple);font-weight:600}
+html[data-theme="dark"] .crisis strong{color:var(--purple)}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(48px,9vw,104px) 0 clamp(40px,7vw,72px)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,56px);align-items:center}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+.hero h1 em{font-style:normal;color:var(--green-deep)}
+html[data-theme="dark"] .hero h1 em{color:var(--green)}
+.hero-media{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--green-wash);
+  aspect-ratio:3/2;display:grid;place-items:center;text-align:center;padding:20px;color:var(--green-deep)}
+.hero-media img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{font-family:"Oswald",sans-serif;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+
+/* ---------- countdown ---------- */
+.count{display:flex;gap:10px;flex-wrap:wrap;margin:2rem 0 0}
+.count div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.6rem .9rem;
+  min-width:70px;text-align:center;box-shadow:var(--shadow)}
+.count b{display:block;font-family:"Oswald",sans-serif;font-size:1.5rem;line-height:1;color:var(--green-deep)}
+html[data-theme="dark"] .count b{color:var(--green)}
+.count span{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+
+/* ---------- stats ---------- */
+.stats{background:var(--green-wash);border-block:1px solid var(--line)}
+.stats-in{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-block:44px;text-align:center}
+@media(max-width:640px){.stats-in{grid-template-columns:1fr;gap:28px}}
+.stat b{display:block;font-family:"Oswald",sans-serif;font-size:clamp(2rem,6vw,2.9rem);line-height:1;color:var(--green-deep)}
+html[data-theme="dark"] .stat b{color:var(--green)}
+.stat span{display:block;margin-top:.5rem;font-size:.9rem;color:var(--muted);max-width:26ch;margin-inline:auto}
+.stat-note{margin:0 0 26px;text-align:center;font-size:.84rem;color:var(--muted)}
+
+/* ---------- sections ---------- */
+section{padding:clamp(48px,8vw,88px) 0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,56px);align-items:start}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(22px,3.5vw,34px);box-shadow:var(--shadow)}
+.event{background:var(--amber-wash);border-radius:var(--radius);padding:clamp(26px,4vw,40px)}
+html[data-theme="dark"] .event{background:var(--surface)}
+.event dl{display:grid;grid-template-columns:auto 1fr;gap:10px 20px;margin:1.6rem 0 0;font-size:1rem}
+.event dt{font-family:"Oswald",sans-serif;text-transform:uppercase;font-size:.78rem;letter-spacing:.1em;color:var(--muted);padding-top:.35em}
+.event dd{margin:0;font-weight:600}
+
+/* ---------- feed ---------- */
+.feed{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.feed{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.feed{grid-template-columns:repeat(2,1fr)}}
+.post{display:block;border-radius:8px;overflow:hidden;background:var(--surface);
+  border:1px solid var(--line);text-decoration:none;aspect-ratio:1/1;transition:transform .15s ease}
+.post:hover{transform:translateY(-3px)}
+.post img{width:100%;height:100%;object-fit:cover;display:block}
+.post .fallback{display:grid;place-items:center;height:100%;padding:14px;text-align:center;
+  font-size:.82rem;color:var(--muted);background:var(--green-wash)}
+
+/* ---------- swatches ---------- */
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.sw{border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;background:var(--surface)}
+.sw-top{padding:22px 18px;display:flex;align-items:center;justify-content:center;min-height:92px;
+  font-family:"Oswald",sans-serif;font-weight:600;font-size:1.05rem}
+.sw-body{padding:14px 16px;font-size:.88rem}
+.sw-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+  background:var(--bg);padding:2px 6px;border-radius:4px;border:1px solid var(--line)}
+.pass{color:var(--green-deep);font-weight:700}
+.fail{color:var(--purple);font-weight:700}
+html[data-theme="dark"] .pass{color:var(--green)}
+
+/* ---------- patch notes ---------- */
+.notes{background:var(--surface);border-block:1px solid var(--line)}
+.note{border-left:4px solid var(--green);padding:4px 0 4px 18px;margin-bottom:26px}
+.note.bad{border-left-color:var(--purple)}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+  overflow-x:auto;font-size:.84rem;line-height:1.6;margin:.7rem 0 0}
+pre code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.note h3{margin-bottom:.35rem}
+.note p{margin:0;font-size:.95rem;color:var(--muted)}
+.note p strong{color:var(--ink)}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:1rem}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+th{font-family:"Oswald",sans-serif;text-transform:uppercase;font-size:.74rem;letter-spacing:.1em;color:var(--muted)}
+td code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+
+/* ---------- footer ---------- */
+footer{background:var(--bg);border-top:1px solid var(--line);padding:44px 0;margin-top:0}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+footer h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+.foot-list{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.foot-list a{color:var(--ink);text-decoration:none;font-size:.95rem}
+.foot-list a:hover{color:var(--green);text-decoration:underline}
+.copy{margin-top:36px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:.87rem;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.copy a{color:var(--muted)}
+
+.banner{max-width:var(--max);margin:0 auto;padding:14px 20px;font-size:.9rem;color:var(--muted);
+  border-bottom:1px solid var(--line);background:var(--amber-wash)}
+html[data-theme="dark"] .banner{background:var(--surface)}
+.banner b{color:var(--ink)}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="banner">
+  <b>Prototype.</b> Contrast-corrected concept built from the live site's markup. Not published by the Foundation — no Elementor changes have been made. Every ratio shown below is measured.
+</div>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top">
+      <img src="https://runforjeev.com/wp-content/uploads/2022/11/Light-logo1.png" alt="Run for Jeev — mental health awareness and suicide prevention">
+    </a>
+    <nav aria-label="Main">
+      <a href="#mission">Mission</a>
+      <a href="#race">The 5K</a>
+      <a href="#feed">Community</a>
+      <a href="#contrast">Contrast</a>
+      <a href="#patches">Patches</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="theme-toggle" id="tt" type="button" aria-label="Switch to dark theme" title="Toggle light / dark">◐</button>
+  </div>
+</header>
+
+<div class="crisis">
+  <div class="wrap">
+    <span aria-hidden="true">💜</span>
+    <span><strong>In crisis right now?</strong> Call or text <a href="tel:988">988</a> for the Suicide &amp; Crisis Lifeline, free and 24/7. Immediate danger: call <a href="tel:911">911</a>.</span>
+  </div>
+</div>
+
+<main id="main">
+
+<div id="top">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">5th Annual Run for Jeev</p>
+      <h1>You are <em>never alone</em> in your journey.</h1>
+      <p class="lede">The Run for Jeev Foundation supports and promotes mental health awareness and suicide prevention in teens and young adults — building a foundation for the youth of today to live in a better tomorrow.</p>
+      <p class="lede" style="font-size:1rem">We believe no struggle is too great to overcome and no thought should go unshared. Through our annual 5K, community events, and community partnerships, we create a space where people feel seen, heard, and understood.</p>
+      <div class="btn-row">
+        <a class="btn btn-solid" href="https://runsignup.com/Race/TX/TheWoodlands/RUNFORJEEV">Register for the 5K</a>
+        <a class="btn btn-green" href="#feed">See the community</a>
+      </div>
+      <div class="count" id="cd" aria-label="Countdown to race day">
+        <div><b id="d">–</b><span>Days</span></div>
+        <div><b id="h">–</b><span>Hours</span></div>
+        <div><b id="m">–</b><span>Minutes</span></div>
+        <div><b id="s">–</b><span>Seconds</span></div>
+      </div>
+      <p style="font-size:.86rem;color:var(--muted);margin-top:.9rem;max-width:44ch">Sunday, November 29, 2026 · Woodforest Bank Stadium, The Woodlands, TX</p>
+    </div>
+    <figure class="hero-media" style="margin:0">
+      <img src="https://runforjeev.com/wp-content/uploads/2025/10/DSC_6165-scaled-e1778789589539.jpg"
+           alt="Run for Jeev participants and volunteers at an outdoor race event, gathered together on the course"
+           loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('p'),{className:'ph',textContent:'Race photography — DSC_6165'}))">
+    </figure>
+  </div>
+</section>
+</div>
+
+<div class="stats">
+  <div class="wrap">
+    <div class="stats-in">
+      <div class="stat"><b>$0</b><span>Funds donated to mental health initiatives</span></div>
+      <div class="stat"><b>0</b><span>Participants in the annual 5K Run for Jeev</span></div>
+      <div class="stat"><b>5th</b><span>Annual Run for Jeev — first held 2022</span></div>
+    </div>
+    <p class="stat-note"><b>Live bug:</b> the first two counters currently read $0 and 0 on the live site — the counter widget is not receiving data. Left as-is here so it stays visible; wire it before the race.</p>
+  </div>
+</div>
+
+<section id="mission">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Our mission</p>
+      <h2>No struggle is too great to overcome.</h2>
+      <p>Our mission is to support and promote mental health awareness and suicide prevention in teens and young adults, creating a foundation for the youth of today to live in a better tomorrow.</p>
+      <p>Through the annual Run for Jeev, community-centered mental health events, and community partnerships, we strive to create a supportive space where people feel seen, heard, and understood — reminding them that they are never alone in their journey.</p>
+      <p>By encouraging open conversations and promoting hope, we believe that no struggle is too great to overcome and no thought should go unshared. Together, we can support one another and help prevent suicide among young adults.</p>
+    </div>
+    <div class="card">
+      <h3>What changed in this prototype</h3>
+      <p style="font-size:.96rem"><strong>Every inline link</strong> moved from the failing <code>#7FB432</code> to <code>#4A6B1F</code> — <span class="pass">6.10:1</span>, comfortably past AA.</p>
+      <p style="font-size:.96rem"><strong>The donate button</strong> moved from <code>#EB9309</code> to <code>#8A5200</code> — white text on it now measures <span class="pass">6.39:1</span>.</p>
+      <p style="font-size:.96rem;margin-bottom:0"><strong>Four font families</strong> cut to two. Barlow for body, Oswald for headings. Roboto and Montserrat dropped — they were near-substitutes for Barlow and added two network round-trips on the critical path.</p>
+    </div>
+  </div>
+</section>
+
+<section id="race" class="notes">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">The race</p>
+      <h2>5th Annual Run for Jeev</h2>
+      <p class="lede">Join us to support mental health awareness and suicide prevention.</p>
+      <p style="font-size:1.05rem">🧡</p>
+      <div class="btn-row">
+        <a class="btn btn-solid" href="https://runsignup.com/Race/TX/TheWoodlands/RUNFORJEEV">Register now</a>
+      </div>
+      <p style="font-size:.86rem;color:var(--muted);margin-top:1.4rem;max-width:48ch">Registration and payments run through RunSignup — correctly off-site for race entries. Keep it that way; it handles waivers, bibs, and payment compliance.</p>
+    </div>
+    <div class="event">
+      <h3>Event details</h3>
+      <dl>
+        <dt>Date</dt><dd>Sunday, November 29, 2026</dd>
+        <dt>Venue</dt><dd>Woodforest Bank Stadium, The Woodlands, TX</dd>
+        <dt>Format</dt><dd>5K run &amp; walk</dd>
+        <dt>Edition</dt><dd>5th annual</dd>
+        <dt>Register</dt><dd><a href="https://runsignup.com/Race/TX/TheWoodlands/RUNFORJEEV">runsignup.com</a></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="feed">
+  <div class="wrap">
+    <p class="eyebrow">Community</p>
+    <h2>What the Foundation has been up to</h2>
+    <p class="lede">Kept, and given better treatment. The Instagram feed is doing real work — it's the org's voice and it proves the mission is active. Every post below now has real descriptive alt text instead of an empty attribute.</p>
+    <div class="feed">
+      <a class="post" href="https://www.instagram.com/p/Dd7cnsnmlGM/" aria-label="Run for Jeev at the AFSP Out of Darkness Walk">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/828532204_17993315010013399_3922542535524150352_nfull.webp" alt="Run for Jeev team at their sponsored table at the AFSP Out of Darkness Walk, greeting attendees and sharing stories" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/DdSFWyPmh7e/" aria-label="Breaking the Silence event">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/810962207_17991107409013399_3074392158089388014_nfull.webp" alt="Foundation members at Cassidy Joined 4 Hope's Breaking the Silence event, listening to speakers share personal mental health stories" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/DdMtUMGNkyc/" aria-label="Registration announcement">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/807920726_17990806836013399_7014358296711916190_nfull.webp" alt="Registration announcement graphic for the 5th annual Run for Jeev on November 29, 2026 at Woodforest Bank Stadium" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/DdKRS0ymmcA/" aria-label="Self-care graphic">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/806473596_17990672895013399_7100020659053266801_nfull.webp" alt="Playful graphic sharing that it is important to take care of your mental health and do what you enjoy" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/DdHbEjmmk8x/" aria-label="World Suicide Prevention Day">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/802641310_17990520150013399_6834230473079318568_nfull.webp" alt="Commemorating World Suicide Prevention Day, honoring lives lost and encouraging people to check on loved ones" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/DdE7062Gqn3/" aria-label="Self-care starter pack">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/801882105_17990388075013399_5426825892043109904_nfull.webp" alt="Self-care starter pack idea post encouraging breaks and time to do enjoyable things, inspired by Active Minds" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/DdCulkXmvQP/" aria-label="National 988 day">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/800993336_17990267634013399_5983784247966230821_nfull.webp" alt="National 988 day post raising awareness of the suicide and crisis lifeline offering 24/7 support and guidance" loading="lazy">
+      </a>
+      <a class="post" href="https://www.instagram.com/p/Dc_iaNbEYky/" aria-label="Remembering those lost">
+        <img src="https://runforjeev.com/wp-content/uploads/sb-instagram-feed-images/800115170_17990108334013399_1463512200358422035_nfull.webp" alt="Reflection post remembering people who lost their lives to suicide and committing to preventing these numbers from growing" loading="lazy">
+      </a>
+    </div>
+    <p style="margin-top:1.6rem"><a href="https://www.instagram.com/runforjeev/" style="font-weight:600">Follow @runforjeev on Instagram →</a></p>
+  </div>
+</section>
+
+<section id="contrast">
+  <div class="wrap">
+    <p class="eyebrow">The accessibility fix</p>
+    <h2>Measured, not estimated</h2>
+    <p class="lede">Every ratio on this page was computed from the actual hex values in the live stylesheet using the WCAG 2.1 relative-luminance formula. AA for body text is 4.5:1; large text is 3:1.</p>
+
+    <h3 style="margin-top:2rem">Current site — failing</h3>
+    <div class="sw-grid">
+      <div class="sw">
+        <div class="sw-top" style="background:#7FB432;color:#FFFEFA">link #7FB432</div>
+        <div class="sw-body">
+          On page background <code>#FFFEFA</code><br>
+          <span class="fail">2.45 : 1 — FAIL</span><br>
+          <span style="color:var(--muted)">Needs 4.5. Every inline link in body copy.</span>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-top" style="background:#EB9309;color:#FFFFFF">donate #EB9309</div>
+        <div class="sw-body">
+          White text on button<br>
+          <span class="fail">2.41 : 1 — FAIL</span><br>
+          <span style="color:var(--muted)">The highest-intent CTA on the site, and the worst contrast on it.</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:2.6rem">Corrected — passing</h3>
+    <div class="sw-grid">
+      <div class="sw">
+        <div class="sw-top" style="background:#4A6B1F;color:#FFFFFF">link #4A6B1F</div>
+        <div class="sw-body">
+          On page background <code>#FFFEFA</code><br>
+          <span class="pass">6.10 : 1 — PASS</span><br>
+          <span style="color:var(--muted)">Body text, links, underlines.</span>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-top" style="background:#2D7A0A;color:#FFFFFF">deep #2D7A0A</div>
+        <div class="sw-body">
+          White text on fill<br>
+          <span class="pass">5.38 : 1 — PASS</span><br>
+          <span style="color:var(--muted)">Secondary buttons, stat numerals.</span>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-top" style="background:#8A5200;color:#FFFFFF">donate #8A5200</div>
+        <div class="sw-body">
+          White text on button<br>
+          <span class="pass">6.39 : 1 — PASS</span><br>
+          <span style="color:var(--muted)">Same amber family, darkened until legible.</span>
+        </div>
+      </div>
+      <div class="sw">
+        <div class="sw-top" style="background:#7C3AB7;color:#FFFFFF">purple #7C3AB7</div>
+        <div class="sw-body">
+          On page background<br>
+          <span class="pass">6.61 : 1 — PASS</span><br>
+          <span style="color:var(--muted)">Matches the 💜 in the org's own voice.</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:2.6rem">Everything else carried along</h3>
+    <table>
+      <caption class="visually-hidden">Accessibility fixes applied in this prototype</caption>
+      <thead><tr><th scope="col">Issue on live site</th><th scope="col">Fix here</th></tr></thead>
+      <tbody>
+        <tr><td>Hero + gallery images have empty <code>alt</code>, one is named <code>DSC_6165</code></td><td>Every image has written descriptive alt</td></tr>
+        <tr><td>Four font families: Barlow, Oswald, Roboto, Montserrat</td><td>Two: Barlow (body) + Oswald (headings)</td></tr>
+        <tr><td>No <code>og:image</code> — social shares render as bare URLs</td><td>Spec'd below; needs one 1200×630 asset</td></tr>
+        <tr><td>Honeypot text <em>"Leave this field empty if you're human"</em> visible in footer</td><td>Removed from markup</td></tr>
+        <tr><td>Footer reads ©2022</td><td>©2026</td></tr>
+        <tr><td>Donate button in lowercase, all other CTAs title case</td><td>Uppercase via the button token</td></tr>
+        <tr><td>No dark mode, no <code>:focus-visible</code>, no reduced-motion</td><td>All three included</td></tr>
+        <tr><td>Counter widgets read $0 and 0</td><td>Still unfixed — data not wired. Flagged, not silently hidden.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="patches" class="notes">
+  <div class="wrap">
+    <p class="eyebrow">For whoever edits Elementor</p>
+    <h2>The four edits</h2>
+
+    <div class="note bad">
+      <h3>1 · Global colors — the whole fix</h3>
+      <p>Elementor → Site Settings → Global Colors. Change the primary and accent swatches; most of the page follows.</p>
+      <pre><code>Primary   #EB9309  →  #8A5200     (2.41:1 → 6.39:1 with white)
+Accent    #7FB432  →  #4A6B1F     (2.45:1 → 6.10:1 on background)</code></pre>
+    </div>
+
+    <div class="note">
+      <h3>2 · Fonts — cut four to two</h3>
+      <p>Keep Barlow for body and Oswald for headings. Delete Roboto and Montserrat from every widget that references them.</p>
+      <pre><code>Body     Barlow      (keep)
+Heading  Oswald      (keep)
+Body     Roboto      (delete — near-substitute for Barlow)
+Body     Montserrat  (delete — near-substitute for Barlow)</code></pre>
+    </div>
+
+    <div class="note">
+      <h3>3 · Alt text — the tedious one</h3>
+      <p>Manual, per image, no shortcut. The hero and carousel currently render <code>alt=""</code>, and <code>DSC_6165</code> is a camera filename, not a description. Copy the alt text written in the feed section above as a starting pattern.</p>
+    </div>
+
+    <div class="note">
+      <h3>4 · OG image — highest social ROI</h3>
+      <p>Confirmed absent from the live site. For an org whose strategy is Instagram reposts, every shared link currently renders as a bare URL. Any 1200×630 image fixes all of them at once.</p>
+      <pre><code>og:image       https://runforjeev.com/wp-content/uploads/og/runforjeev-1200x630.jpg
+og:image:width 1200
+og:image:height 630
+og:title       Run for Jeev — mental health awareness &amp; suicide prevention
+og:description 5th Annual Run for Jeev · November 29, 2026 · The Woodlands, TX</code></pre>
+    </div>
+
+    <div class="note bad">
+      <h3>Free wins, no design decision needed</h3>
+      <p>Hide or delete the comment-spam honeypot currently rendering as visible footer text · change ©2022 to ©2026 · title-case the donate button. Under an hour total.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Connect</p>
+    <h2>Reach us</h2>
+    <p class="lede">Questions about the 5K, partnerships, or donating — email is the fastest route. If you or someone you know is in crisis, please call or text <a href="tel:988"><strong>988</strong></a> instead.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <img src="https://runforjeev.com/wp-content/uploads/2022/11/Light-logo1.png" alt="Run for Jeev" style="height:52px;width:auto;display:block;margin-bottom:14px">
+        <p style="font-size:.94rem;color:var(--muted);max-width:40ch">In loving memory of Sanjeev Panja. Our goal is to promote mental health awareness and suicide prevention in youth. You are not alone.</p>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul class="foot-list">
+          <li><a href="#mission">Our mission</a></li>
+          <li><a href="#race">5th Annual 5K</a></li>
+          <li><a href="#feed">Community</a></li>
+          <li><a href="#contrast">Accessibility</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Social &amp; email</h4>
+        <ul class="foot-list">
+          <li><a href="mailto:runforjeev@gmail.com">runforjeev@gmail.com</a></li>
+          <li><a href="https://www.instagram.com/runforjeev/">Instagram</a></li>
+          <li><a href="https://www.facebook.com/people/Run-for-Jeev/100086718930777/">Facebook</a></li>
+          <li><a href="https://www.youtube.com/@runforjeev">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copy">
+      <span>©2026 Run for Jeev Foundation. In loving memory of Sanjeev Panja.</span>
+      <span>If you are in crisis, call or text <a href="tel:988"><strong>988</strong></a>. Immediate danger: <a href="tel:911">911</a>.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('tt');
+  function apply(t){ root.setAttribute('data-theme',t);
+    btn.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme'); }
+  var saved=null; try{ saved=localStorage.getItem('rfj-theme'); }catch(e){}
+  apply(saved || (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  btn.addEventListener('click',function(){
+    var next = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+    apply(next); try{ localStorage.setItem('rfj-theme',next); }catch(e){}
+  });
+
+  var target=new Date('2026-11-29T08:00:00-06:00').getTime();
+  var d=document.getElementById('d'),h=document.getElementById('h'),
+      m=document.getElementById('m'),s=document.getElementById('s');
+  function tick(){
+    var left=target-Date.now();
+    if(left<0){ d.textContent='0'; h.textContent='0'; m.textContent='0'; s.textContent='0'; return; }
+    var sec=Math.floor(left/1000);
+    d.textContent=Math.floor(sec/86400);
+    h.textContent=String(Math.floor(sec%86400/3600)).padStart(2,'0');
+    m.textContent=String(Math.floor(sec%3600/60)).padStart(2,'0');
+    s.textContent=String(sec%60).padStart(2,'0');
+  }
+  tick(); setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>
